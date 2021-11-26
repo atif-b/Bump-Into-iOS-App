@@ -33,18 +33,12 @@ const styles = StyleSheet.create({
 
 const Stack = createNativeStackNavigator();
 
-const BumpInto = () => {
-  //const x = 'bump app';     /***** use this to debug in console *****/
-  //console.log(x);
+function bInto({navigation}) {
+  const BumpInto = () => {
+    //const x = 'bump app';     /***** use this to debug in console *****/
+    //console.log(x);
 
-  return (
-    <NavigationContainer>
-      {/* <Stack.Navigator> */}
-      {/* <Stack.Screen
-       name="Home"
-          component={HomeScreen}
-          options={{ title: 'Welcome' }} */}
-
+    return (
       <View style={styles.center}>
         <Text style={styles.red}>"Bump Into"</Text>
         <View style={styles.buttonCtn}>
@@ -56,9 +50,37 @@ const BumpInto = () => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* </Stack.Navigator> */}
+    );
+  };
+}
+
+function homeScreen({navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
+      <Button title="cccc" onPress={() => navigation.navigate('s2')} />
+    </View>
+  );
+}
+
+function s2({navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>s2</Text>
+      <Button title="cccc" onPress={() => navigation.navigate('Home')} />
+    </View>
+  );
+}
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={homeScreen} />
+        <Stack.Screen name="s2" component={s2} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-export default BumpInto;
+export default App;
