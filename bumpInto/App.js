@@ -58,7 +58,7 @@ function homeScreen({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
-      <Button title="cccc" onPress={() => navigation.navigate('s2')} />
+      <Button title="to screen 2" onPress={() => navigation.navigate('s2')} />
     </View>
   );
 }
@@ -67,7 +67,8 @@ function s2({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>s2</Text>
-      <Button title="cccc" onPress={() => navigation.navigate('Home')} />
+      <Button title="to screen 1" onPress={() => navigation.navigate('Home')} />
+      {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
     </View>
   );
 }
