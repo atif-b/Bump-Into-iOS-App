@@ -4,6 +4,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
+// Screens
+import PreLogin from './screens/PreLogin';
+import Login from './screens/Login';
+import Register from './screens/Register';
+import Home from './screens/Home';
+
 const styles = StyleSheet.create({
   center: {
     alignItems: 'center',
@@ -77,8 +83,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={homeScreen} />
-        <Stack.Screen name="s2" component={s2} />
+        <Stack.Screen name="PreLogin" component={homeScreen} />
+        <Stack.Screen name="Login" component={s2} />
       </Stack.Navigator>
     </NavigationContainer>
   );
