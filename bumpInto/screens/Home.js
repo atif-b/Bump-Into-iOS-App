@@ -8,11 +8,10 @@ const Home = ({navigation}) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>home</Text>
-      <Button
-        title="to screen 1"
-        onPress={() => navigation.navigate('Login')}
-      />
+      <Button title="Log out" onPress={() => navigation.navigate('Login')} />
       {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
     </View>
   );
 };
+
+export default Home;
