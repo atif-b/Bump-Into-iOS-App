@@ -22,6 +22,7 @@ const Login = ({navigation}) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.text}>Bump Into</Text>
+      {/* Maybe create a logo for bump into title??     */}
 
       <FormInput
         labelValue={email}
@@ -81,10 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 50,
+    paddingTop: 180,
   },
   text: {
-    //fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
