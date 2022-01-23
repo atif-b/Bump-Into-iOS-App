@@ -43,9 +43,9 @@ const Login = ({navigation}) => {
 
       <FormButton
         buttonTitle="Sign In"
-        // onPress={() => LoginCheck(email, password)}
-        onPress={() => navigation.navigate('Home')}
-      />
+        onPress={() => LoginCheck(email, password, navigation)} 
+        //onPress={() => navigation.navigate('Home')}
+      /> 
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
@@ -62,18 +62,17 @@ const Login = ({navigation}) => {
   );
 };
 
-//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-//       <Text>Login</Text>
-//       <TextInput />
-//       <Button title="Log in" onPress={() => navigation.navigate('Home')} />
-//       <Button
-//         title="Register"
-//         onPress={() => navigation.navigate('Register')}
-//       />
-//       {/* Title is what the button says. navigation.navigate must have stack.screen name (that is from stack.nav) */}
-//     </View>
-//   );
-// };
+
+
+const LoginCheck = (email, password, navigation) => {
+  console.log("email: "+ email +" password: "+ password) 
+  if (email == "" || password == ""){
+    console.log("Please enter your email & password")
+  } else {
+    navigation.navigate('Home')
+  }
+  
+}
 
 export default Login;
 
