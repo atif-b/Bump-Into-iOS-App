@@ -21,9 +21,8 @@ const Login = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.text}>Bump Into</Text>
-      {/* Maybe create a logo for bump into title??     */}
-
+      <Text style={styles.text}>Bump Into (Create logo)</Text>
+      
       <FormInput
         labelValue={email}
         onChangeText={userEmail => setEmail(userEmail)}
@@ -40,6 +39,7 @@ const Login = ({navigation}) => {
         iconType="lock"
         secureTextEntry={true}
       />
+      
 
       <FormButton
         buttonTitle="Sign In"
