@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import MainContainer from '@naviagation/MainContainer';
+// import MainContainer from '@naviagation/MainContainer';
 
 const Home = ({navigation}) => {
   return (

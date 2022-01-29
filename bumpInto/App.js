@@ -9,6 +9,8 @@ import PreLogin from './screens/PreLogin';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import Home from './screens/Home';
+import Tabs from './navigation/MainContainer';
+
 
 const styles = StyleSheet.create({
   center: {
@@ -92,8 +94,9 @@ const App = () => {
         <Stack.Screen name="PreLogin" component={PreLogin} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Home" component={Tabs} />
       </Stack.Navigator>
+      {/* <Tabs /> */}
     </NavigationContainer>
   );
 };

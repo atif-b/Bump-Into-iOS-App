@@ -3,11 +3,26 @@ import {
   Text,
   View
 } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Home from '../screens/Home';
 
-export default function MainContainer() {
+const Tab = createBottomTabNavigator();
+
+const Tabs = () => {
     return(
-        <View>
-            <Text>Hi</Text>
-        </View>
+        <Tab.Navigator>
+            <Tab.Screen name="Home2" component={Home} />
+        </Tab.Navigator>
     );
 }
+
+export default Tabs;
+
+
+// export default function MainContainer() {
+//     return(
+//         <View>
+//             <Text>Hi</Text>
+//         </View>
+//     );
+// }
