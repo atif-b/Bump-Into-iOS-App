@@ -65,7 +65,7 @@ function bInto({navigation}) {
   };
 }
 
-function homeScreen({navigation}) {
+function homeScreen({navigation, route}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Pre Login</Text>

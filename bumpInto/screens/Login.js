@@ -66,10 +66,19 @@ const Login = ({navigation}) => {
 
 const LoginCheck = (email, password, navigation) => {
   console.log("email: "+ email +" password: "+ password) 
-  if (email == "" || password == ""){
+  if (email == "" || password == "" || (typeof email == "undefined") || (typeof password == "undefined")){
     console.log("Please enter your email & password")
   } else {
-    navigation.navigate('Home')
+    // if (email.includes('@my.westminster.ac.uk') || email.includes('@westminster.ac.uk')){
+    //   navigation.navigate('Home')
+    // }
+    //UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
+
+    navigation.navigate('Home', {
+      userEmail: 'aaa',
+      otherParam: 'test text',
+    });
+
   }
   
 }
