@@ -16,20 +16,26 @@ const PreLogin = ({navigation}) => {
         {
           backgroundColor: '#4ABC93',
           image: <Image source={require('../assets/connect.png')} />,
-          title: 'PreLogin 1',
-          subtitle: 'info 1',
+          title: 'Bump Into',
+          subtitle: 'Add or message peers you pass in your university campus',
         },
         {
           backgroundColor: '#F55D3E',
           image: <Image source={require('../assets/connect.png')} />,
-          title: 'PreLogin 2',
-          subtitle: 'info 2',
+          title: 'Create your profile',
+          subtitle: 'Share as much (or as little) as you want about yourself!',
         },
         {
           backgroundColor: '#47AD8D',
           image: <Image source={require('../assets/connect.png')} />,
-          title: 'PreLogin 3',
-          subtitle: 'info 3',
+          title: 'QR sharing',
+          subtitle: 'Quickly share your profile through your own QR code',
+        },
+        {
+          backgroundColor: '#F55F24',
+          image: <Image source={require('../assets/connect.png')} />,
+          title: 'QR chat rooms',
+          subtitle: 'See a QR chat room code on campus? Scan it to join a virtual chat room for that social area!',
         },
       ]}
     />

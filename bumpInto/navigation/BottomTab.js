@@ -4,8 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import Feather from 'react-native-vector-icons/Feather';
-// import Icon from 'react-native-ionicons';
 
 
 
@@ -19,20 +17,12 @@ const Tabs = () => {
         }}>
             <Tab.Screen name="Home2" component={Home} options={{
                 tabBarIcon: ({color, size}) => (
-                    // <ion-icon name="person-circle-outline"></ion-icon>
                     <Ionicons name="home-outline" color={color} size={size}/>
-                    // <Icon name="camera"/>
-                    // <Ionicons name="accessibility-outline"></Ionicons>
-
                 )
             }} />
             <Tab.Screen name="Profile" component={Profile} options={{
                 tabBarIcon: ({color, size}) => (
                     <Ionicons name="person-outline" color={color} size={size}/>
-                    // <Icon name="camera"/>
-                    // <Ionicons name="accessibility-outline"></Ionicons>
-                    
-
                 )
             }} />
 
@@ -41,12 +31,3 @@ const Tabs = () => {
 }
 
 export default Tabs;
-
-
-// export default function MainContainer() {
-//     return(
-//         <View>
-//             <Text>Hi</Text>
-//         </View>
-//     );
-// }

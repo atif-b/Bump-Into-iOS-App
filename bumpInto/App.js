@@ -46,9 +46,6 @@ const Stack = createNativeStackNavigator();
 
 function bInto({navigation}) {
   const BumpInto = () => {
-    //const x = 'bump app';     /***** use this to debug in console *****/
-    //console.log(x);
-
     return (
       <View style={styles.center}>
         <Text style={styles.red}>"Bump Into"</Text>
@@ -65,27 +62,27 @@ function bInto({navigation}) {
   };
 }
 
-function homeScreen({navigation, route}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Pre Login</Text>
-      <Button title="to login" onPress={() => navigation.navigate('s2')} />
-    </View>
-  );
-}
+// function homeScreen({navigation, route}) {
+//   return (
+//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+//       <Text>Pre Login</Text>
+//       <Button title="to login" onPress={() => navigation.navigate('s2', {p1:'2'})} />
+//     </View>
+//   );
+// }
 
-function s2({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Login</Text>
-      <Button
-        title="Back to pre"
-        onPress={() => navigation.navigate('homeScreen')}
-        /* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */
-      />
-    </View>
-  );
-}
+// function s2({navigation}) {
+//   return (
+//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+//       <Text>Login</Text>
+//       <Button
+//         title="Back to pre"
+//         onPress={() => navigation.navigate('homeScreen')}
+//         /* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */
+//       />
+//     </View>
+//   );
+// }
 
 const App = () => {
   return (

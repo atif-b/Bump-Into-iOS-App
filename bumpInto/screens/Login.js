@@ -73,15 +73,18 @@ const LoginCheck = (email, password, navigation) => {
     //   navigation.navigate('Home')
     // }
     //UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
-
-    navigation.navigate('Home', {
-      userEmail: 'aaa',
-      otherParam: 'test text',
-    });
-
+    LoadHome(email, navigation)
+    
   }
-  
 }
+
+const LoadHome = (email, navigation) =>{
+  navigation.navigate('Home', {
+    email: email,
+  });
+};
+
+
 
 export default Login;
 
