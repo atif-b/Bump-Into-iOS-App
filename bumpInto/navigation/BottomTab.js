@@ -5,11 +5,15 @@ import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
-
 const Tab = createBottomTabNavigator();
 
-const Tabs = () => {
+const Tabs = (navigation, route) => {
+    console.log("******tabs*****");
+    if (route.params?.check){
+      console.log(route.params?.check);
+    } else {
+      console.log("nope t");
+    }
     return(
         <Tab.Navigator screenOptions={{
             headerShown: false,

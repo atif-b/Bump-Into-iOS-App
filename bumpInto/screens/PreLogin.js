@@ -10,8 +10,8 @@ import Login from './Login';
 const PreLogin = ({navigation}) => {
   return (
     <Onboarding
-      onSkip={() => navigation.replace('Login')}
-      onDone={() => navigation.navigate('Login')}
+      onSkip={() => navigation.replace('Login', {test: 'atif'})}
+      onDone={() => navigation.navigate('Login', {test: 'atif'})}
       pages={[
         {
           backgroundColor: '#4ABC93',

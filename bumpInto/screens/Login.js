@@ -15,9 +15,17 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
-const Login = ({navigation}) => {
+const Login = ({navigation, route}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  
+  console.log("********");
+  if (route.params?.test){
+      console.log("yess");
+      console.log(route.params?.test);
+    } else {
+      console.log("nope");
+    }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -43,8 +51,8 @@ const Login = ({navigation}) => {
 
       <FormButton
         buttonTitle="Sign In"
-        onPress={() => LoginCheck(email, password, navigation)} 
-        //onPress={() => navigation.navigate('Home')}
+        // onPress={() => LoginCheck(email, password, navigation)} 
+        onPress={() => navigation.navigate('Home', {check: "jfryferg"})}
       /> 
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
@@ -53,7 +61,7 @@ const Login = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.forgotButton}
-        onPress={() => navigation.navigate('Signup')}>
+        onPress={() => navigation.navigate('Register')}>
         <Text style={styles.navButtonText}>
           Don't have an acount? Create here
         </Text>
@@ -80,7 +88,7 @@ const LoginCheck = (email, password, navigation) => {
 
 const LoadHome = (email, navigation) =>{
   navigation.navigate('Home', {
-    email: email,
+    email: 'test',
   });
 };
 
