@@ -3,6 +3,7 @@ import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import QRCode from 'react-native-qrcode-svg';
 
 export default function Home({navigation, route}) {
 
@@ -27,6 +28,18 @@ export default function Home({navigation, route}) {
       </View>
 
       <View style={{flex: 2, backgroundColor: "white"}}>
+
+      <QRCode
+        value='test!'
+        color={'#2C8DDB'}
+        backgroundColor={'white'}
+        size={100}
+        // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
+        logoMargin={2}
+        logoSize={20}
+        logoBorderRadius={10}
+        logoBackgroundColor={'transparent'}
+      />
         
         <Button title="Log out" onPress={() => navigation.navigate('Login')} />
         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}

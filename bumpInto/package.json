@@ -19,8 +19,10 @@
     "react-native-elements": "^3.4.2",
     "react-native-ionicons": "^4.6.5",
     "react-native-onboarding-swiper": "^1.1.4",
+    "react-native-qrcode-svg": "^6.1.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",
+    "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^9.0.0"
   },
   "devDependencies": {
