@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import auth from '@react-native-firebase/auth'
+import {AuthContext} from './navigation/AuthProvider';
 
 // Screens
 import PreLogin from './screens/PreLogin';
@@ -14,56 +17,25 @@ import Profile from './screens/Profile';
 
 import Tabs from './navigation/BottomTab';
 
-
-
-// const styles = StyleSheet.create({
-//   center: {
-//     alignItems: 'center',
-//     flex: 1,
-//     justifyContent: 'center',
-//   },
-
-//   red: {
-//     color: 'red',
-//   },
-
-//   buttonCtn: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-
-//   button: {
-//     backgroundColor: '#4abc93',
-//     padding: 10,
-//     width: '45%',
-//   },
-
-//   buttonTxt: {
-//     color: 'white',
-//   },
-// });
-
 const Stack = createNativeStackNavigator();
 
-// function bInto({navigation}) {
-//   const BumpInto = () => {
-//     return (
-//       <View style={styles.center}>
-//         <Text style={styles.red}>"Bump Into"</Text>
-//         <View style={styles.buttonCtn}>
-//           <TouchableOpacity style={styles.button}>
-//             <Text style={styles.buttonTxt}>Login</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity style={styles.button}>
-//             <Text style={styles.buttonTxt}>Signup</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     );
-//   };
-// }
-
 const App = () => {
+
+  // const {user, setUser} = useContext(AuthContext);
+  const [initializing, setInitializing] = useState(true);
+
+  const onAuthStateChanged = (user) => {
+    setUser(user);
+    if(initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  // if (initializing) return null;
+
   return (
     <NavigationContainer>
       <Stack.Navigator
