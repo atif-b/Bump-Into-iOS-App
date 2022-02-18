@@ -1,4 +1,4 @@
-import React, {useContent, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   View,
@@ -14,25 +14,27 @@ import FormButton from '../components/FormButton';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../navigation/AuthProvider';
 
 const Register = ({navigation, route}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
 
-  
-  console.log("********");
-  if (route.params?.test){
-      console.log("yess");
-      console.log(route.params?.test);
-    } else {
-      console.log("nope");
-    }
+  const {register} = useContext(AuthContext);
+
+  console.log('********');
+  if (route.params?.test) {
+    console.log('yess');
+    console.log(route.params?.test);
+  } else {
+    console.log('nope');
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.text}>Create an account</Text>
-      
+
       <FormInput
         labelValue={email}
         onChangeText={userEmail => setEmail(userEmail)}
@@ -57,61 +59,56 @@ const Register = ({navigation, route}) => {
         iconType="lock"
         secureTextEntry={true}
       />
-      
 
       <FormButton
         buttonTitle="Register"
-        // onPress={() => LoginCheck(email, password, navigation)} 
-        onPress={() => navigation.navigate('Home', {check: "jfryferg"})}
-      /> 
+        onPress={() => register(email, password)}
+      />
 
       <View style={styles.textPrivate}>
         <Text>By registering, you confirm that you accept our </Text>
-        <TouchableOpacity onPress={() => alert('Terms Clicked! (Think id need to link to a seperate page)')}> 
-          <Text style={{color: 'orange',}}>
-            Terms of service
-          </Text>
-        </TouchableOpacity>  
+        <TouchableOpacity
+          onPress={() =>
+            alert('Terms Clicked! (Think id need to link to a seperate page)')
+          }>
+          <Text style={{color: 'orange'}}>Terms of service</Text>
+        </TouchableOpacity>
         <Text> and </Text>
-        <Text style={{color: 'orange',}}>
-            Privacy policy.
-          </Text>
+        <Text style={{color: 'orange'}}>Privacy policy.</Text>
       </View>
 
       <TouchableOpacity
         style={styles.forgotButton}
         onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.navButtonText}>
-          Have an acount? Sign in
-        </Text>
+        <Text style={styles.navButtonText}>Have an acount? Sign in</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
 
-
-
 const LoginCheck = (email, password, navigation) => {
-  console.log("email: "+ email +" password: "+ password) 
-  if (email == "" || password == "" || (typeof email == "undefined") || (typeof password == "undefined")){
-    console.log("Please enter your email & password")
+  console.log('email: ' + email + ' password: ' + password);
+  if (
+    email == '' ||
+    password == '' ||
+    typeof email == 'undefined' ||
+    typeof password == 'undefined'
+  ) {
+    console.log('Please enter your email & password');
   } else {
     // if (email.includes('@my.westminster.ac.uk') || email.includes('@westminster.ac.uk')){
     //   navigation.navigate('Home')
     // }
     //UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
-    LoadHome(email, navigation)
-    
+    LoadHome(email, navigation);
   }
-}
+};
 
-const LoadHome = (email, navigation) =>{
+const LoadHome = (email, navigation) => {
   navigation.navigate('Home', {
     email: 'test',
   });
 };
-
-
 
 export default Register;
 
@@ -140,6 +137,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginVertical: 35,
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });

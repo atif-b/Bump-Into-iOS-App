@@ -1,53 +1,62 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
+import {AuthContext} from '../navigation/AuthProvider';
+import FormButton from '../components/FormButton';
 
 export default function Home({navigation, route}) {
+  const {user, logout} = useContext(AuthContext);
 
-    //const route = useRoute();
-
-    console.log("home");
-    if (route.params?.check){
-      console.log(route.params?.check);
-    } else {
-      console.log("nope tt");
-    }
-  return(
-    <View style={{
-      // Try setting `flexDirection` to `"row"`.
-      flexDirection: "column",
-      flex: 1,
-      
-    }}>
-      <View style={{flex: 0.3, backgroundColor: "grey", justifyContent: "flex-end"}}>
+  console.log('home');
+  if (route.params?.check) {
+    console.log(route.params?.check);
+  } else {
+    console.log('nope tt');
+  }
+  return (
+    <View
+      style={{
+        // Try setting `flexDirection` to `"row"`.
+        flexDirection: 'column',
+        flex: 1,
+      }}>
+      <View
+        style={{
+          flex: 0.3,
+          backgroundColor: 'grey',
+          justifyContent: 'flex-end',
+        }}>
         <Text>{route.param} </Text>
         {/* <Text> {navigation.getParam()} </Text> */}
       </View>
 
-      <View style={{flex: 2, backgroundColor: "white"}}>
+      <View style={{flex: 2, backgroundColor: 'white'}}>
+        <QRCode
+          value="test!"
+          color={'#2C8DDB'}
+          backgroundColor={'white'}
+          size={100}
+          // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
+          logoMargin={2}
+          logoSize={20}
+          logoBorderRadius={10}
+          logoBackgroundColor={'transparent'}
+        />
 
-      <QRCode
-        value='test!'
-        color={'#2C8DDB'}
-        backgroundColor={'white'}
-        size={100}
-        // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
-        logoMargin={2}
-        logoSize={20}
-        logoBorderRadius={10}
-        logoBackgroundColor={'transparent'}
-      />
-        
-        <Button title="Log out" onPress={() => navigation.navigate('Login')} />
+        <Text> Welcome {user.uid}</Text>
+
+        {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
+        {/* <Button title="Log out" onPress={() => logout()} /> */}
+        <FormButton buttonTitle="Logout" onPress={() => logout()} />
+
         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
       </View>
     </View>
   );
-};
-
+}
 
 // const Home = ({navigation, route}) => {
 
@@ -64,7 +73,7 @@ export default function Home({navigation, route}) {
 //       // Try setting `flexDirection` to `"row"`.
 //       flexDirection: "column",
 //       flex: 1,
-      
+
 //     }}>
 //       <View style={{flex: 0.3, backgroundColor: "grey", justifyContent: "flex-end"}}>
 //         <Text>hi </Text>
@@ -72,15 +81,13 @@ export default function Home({navigation, route}) {
 //       </View>
 
 //       <View style={{flex: 2, backgroundColor: "white"}}>
-        
+
 //         <Button title="Log out" onPress={() => navigation.navigate('Login')} />
 //         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
 //       </View>
 //     </View>
 //   );
 // };
-
-
 
 // function Home({navigation, route}) {
 //   // const {userEmail, otherParam} = route.params;
@@ -97,23 +104,20 @@ export default function Home({navigation, route}) {
 //       flexDirection: "column",
 //       flex: 1,
 //     }}>
-    
+
 //       <View style={{flex: 0.3, backgroundColor: "grey", justifyContent: "flex-end"}}>
 //         <Text>Hi! </Text>
 //         {/* <Text> {navigation.getParam()} </Text> */}
 //       </View>
 
 //       <View style={{flex: 2, backgroundColor: "white"}}>
-        
+
 //         <Button title="Log out" onPress={() => navigation.navigate('Login')} />
 //         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
 //       </View>
 //     </View>
 //   );
 // };
-
-
-
 
 //export default Home();
 // export default Home;

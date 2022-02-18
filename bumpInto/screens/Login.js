@@ -1,4 +1,4 @@
-import React, {useContent, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   View,
@@ -14,23 +14,26 @@ import FormButton from '../components/FormButton';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../navigation/AuthProvider';
 
 const Login = ({navigation, route}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  
-  console.log("********");
-  if (route.params?.test){
-      console.log("yess");
-      console.log(route.params?.test);
-    } else {
-      console.log("nope");
-    }
+
+  const {login} = useContext(AuthContext);
+
+  console.log('********');
+  if (route.params?.test) {
+    console.log('yess');
+    console.log(route.params?.test);
+  } else {
+    console.log('nope');
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.text}>Bump Into (Create logo)</Text>
-      
+
       <FormInput
         labelValue={email}
         onChangeText={userEmail => setEmail(userEmail)}
@@ -47,13 +50,13 @@ const Login = ({navigation, route}) => {
         iconType="lock"
         secureTextEntry={true}
       />
-      
 
       <FormButton
         buttonTitle="Sign In"
-        // onPress={() => LoginCheck(email, password, navigation)} 
-        onPress={() => navigation.navigate('Home', {check: "jfryferg"})}
-      /> 
+        // onPress={() => LoginCheck(email, password, navigation)}
+        // onPress={() => navigation.navigate('Home', {check: 'jfryferg'})}
+        onPress={() => login(email, password)}
+      />
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
@@ -70,29 +73,29 @@ const Login = ({navigation, route}) => {
   );
 };
 
-
-
 const LoginCheck = (email, password, navigation) => {
-  console.log("email: "+ email +" password: "+ password) 
-  if (email == "" || password == "" || (typeof email == "undefined") || (typeof password == "undefined")){
-    console.log("Please enter your email & password")
+  console.log('email: ' + email + ' password: ' + password);
+  if (
+    email == '' ||
+    password == '' ||
+    typeof email == 'undefined' ||
+    typeof password == 'undefined'
+  ) {
+    console.log('Please enter your email & password');
   } else {
     // if (email.includes('@my.westminster.ac.uk') || email.includes('@westminster.ac.uk')){
     //   navigation.navigate('Home')
     // }
     //UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
-    LoadHome(email, navigation)
-    
+    LoadHome(email, navigation);
   }
-}
+};
 
-const LoadHome = (email, navigation) =>{
+const LoadHome = (email, navigation) => {
   navigation.navigate('Home', {
     email: 'test',
   });
 };
-
-
 
 export default Login;
 
