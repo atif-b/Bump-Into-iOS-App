@@ -46,7 +46,8 @@ export default function Home({navigation, route}) {
           logoBackgroundColor={'transparent'}
         />
 
-        <Text> Welcome {user.uid}</Text>
+        <Text> Welcome {user.email}</Text>
+        {/* <Text> Email verified? {user.emailVerified}</Text> */}
 
         {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
         {/* <Button title="Log out" onPress={() => logout()} /> */}
