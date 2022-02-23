@@ -391,7 +391,7 @@ PODS:
     - Firebase/Auth (= 8.12.1)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.2.0):
+  - RNGestureHandler (2.1.1):
     - React-Core
   - RNScreens (3.10.2):
     - React-Core
@@ -623,7 +623,7 @@ SPEC CHECKSUMS:
   ReactCommon: 9bac022ab71596f2b0fde1268272543184c63971
   RNFBApp: 06c8447270d295edc431bccd55970d8711a07a42
   RNFBAuth: e248a56b1d28d3b53b54b72a296cf9270df1d96e
-  RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
+  RNGestureHandler: e1ad51d31a580755079d5124d3ab66f0fcaa8311
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
