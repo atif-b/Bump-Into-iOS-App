@@ -66,7 +66,7 @@ const Login = ({navigation, route}) => {
         style={styles.forgotButton}
         onPress={() => navigation.navigate('Register')}>
         <Text style={styles.navButtonText}>
-          Don't have an acount? Create here
+          Don't have an account? Create here
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -115,12 +115,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   forgotButton: {
-    marginVertical: 35,
+    marginVertical: 20,
   },
   navButtonText: {
     fontSize: 18,
     fontWeight: '500',
     color: '#2e64e5',
-    //fontFamily: 'Lato-Regular',
+
+    // fontFamily: 'Lato-Regular',
   },
 });

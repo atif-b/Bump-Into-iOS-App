@@ -19,17 +19,20 @@ import {AuthContext} from '../navigation/AuthProvider';
 const Register = ({navigation, route}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+
+  // const [confirmPassword, setConfirmPassword] = useState();
 
   const {register} = useContext(AuthContext);
 
-  console.log('********');
-  if (route.params?.test) {
-    console.log('yess');
-    console.log(route.params?.test);
-  } else {
-    console.log('nope');
-  }
+  // console.log('********');
+  // if (route.params?.test) {
+  //   console.log('yess');
+  //   console.log(route.params?.test);
+  // } else {
+  //   console.log('nope');
+  // }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -38,7 +41,7 @@ const Register = ({navigation, route}) => {
       <FormInput
         labelValue={email}
         onChangeText={userEmail => setEmail(userEmail)}
-        placeholderText="Email"
+        placeholderText="University Email"
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
@@ -53,16 +56,31 @@ const Register = ({navigation, route}) => {
       />
 
       <FormInput
+        labelValue={firstName}
+        onChangeText={userFirstName => setFirstName(userFirstName)}
+        placeholderText="First name"
+      />
+
+      <FormInput
+        labelValue={lastName}
+        onChangeText={userLastName => setLastName(userLastName)}
+        placeholderText="Last name"
+      />
+
+      {/* <FormInput
         labelValue={confirmPassword}
         onChangeText={userPassword => setPassword(userPassword)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
-      />
+      /> */}
 
       <FormButton
         buttonTitle="Register"
-        onPress={() => register(email, password)}
+        // onPress={() => register(email, password)}
+        onPress={() =>
+          LoginCheck(email, password, firstName, lastName, register, navigation)
+        }
       />
 
       <View style={styles.textPrivate}>
@@ -86,21 +104,38 @@ const Register = ({navigation, route}) => {
   );
 };
 
-const LoginCheck = (email, password, navigation) => {
+const LoginCheck = (
+  email,
+  password,
+  firstName,
+  lastName,
+  register,
+  navigation,
+) => {
   console.log('email: ' + email + ' password: ' + password);
   if (
     email == '' ||
     password == '' ||
+    firstName == '' ||
+    lastName == '' ||
     typeof email == 'undefined' ||
-    typeof password == 'undefined'
+    typeof password == 'undefined' ||
+    typeof firstName == 'undefined' ||
+    typeof lastName == 'undefined'
   ) {
-    console.log('Please enter your email & password');
+    alert('Please do not leave any details blank');
   } else {
-    // if (email.includes('@my.westminster.ac.uk') || email.includes('@westminster.ac.uk')){
-    //   navigation.navigate('Home')
-    // }
-    //UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
-    LoadHome(email, navigation);
+    if (
+      email.includes('@my.westminster.ac.uk') ||
+      email.includes('@westminster.ac.uk')
+    ) {
+      // navigation.navigate('Home')
+      register(email, password, firstName, lastName);
+    } else {
+      alert('Please use your Westminster email (@my.westminster.ac.uk)');
+    }
+    // UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
+    // LoadHome(email, navigation);
   }
 };
 
@@ -117,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 180,
+    paddingTop: 90,
   },
   text: {
     fontSize: 28,

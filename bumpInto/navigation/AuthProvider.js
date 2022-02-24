@@ -19,18 +19,26 @@ export const AuthProvider = ({children}) => {
             console.log(e);
           }
         },
-        register: async (email, password) => {
+        register: async (email, password, firstName, lastName) => {
+          const update = {
+            displayName: firstName + ' ' + lastName,
+          };
+
           try {
             await auth().createUserWithEmailAndPassword(email, password);
+
+            await auth().currentUser.updateProfile(update);
           } catch (e) {
             console.log(e);
           }
         },
         logout: async () => {
           try {
-            await auth().signOut();
+            await auth()
+              .signOut()
+              .then(() => console.log('User Signed out!'));
           } catch (e) {
-            console.log(e);
+            console.log('Error while logging out: ' + e);
           }
         },
       }}>

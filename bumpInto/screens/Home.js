@@ -6,16 +6,23 @@ import {useNavigation} from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 import {AuthContext} from '../navigation/AuthProvider';
 import FormButton from '../components/FormButton';
+import auth from '@react-native-firebase/auth';
 
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 
-  console.log('home');
-  if (route.params?.check) {
-    console.log(route.params?.check);
-  } else {
-    console.log('nope tt');
-  }
+  // const userr = auth().currentUser;
+
+  // user.providerData.forEach(userInfo => {
+  //   console.log('User info for provider: ', userInfo);
+  // });
+
+  // console.log('home');
+  // if (route.params?.check) {
+  //   console.log(route.params?.check);
+  // } else {
+  //   console.log('nope tt');
+  // }
   return (
     <View
       style={{
@@ -46,7 +53,9 @@ export default function Home({navigation, route}) {
           logoBackgroundColor={'transparent'}
         />
 
-        <Text> Welcome {user.uid}</Text>
+        <Text> Welcome {user.displayName}</Text>
+
+        <Text> Welcome </Text>
 
         {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
         {/* <Button title="Log out" onPress={() => logout()} /> */}
