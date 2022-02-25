@@ -11,22 +11,9 @@ import auth from '@react-native-firebase/auth';
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 
-  // const userr = auth().currentUser;
-
-  // user.providerData.forEach(userInfo => {
-  //   console.log('User info for provider: ', userInfo);
-  // });
-
-  // console.log('home');
-  // if (route.params?.check) {
-  //   console.log(route.params?.check);
-  // } else {
-  //   console.log('nope tt');
-  // }
   return (
     <View
       style={{
-        // Try setting `flexDirection` to `"row"`.
         flexDirection: 'column',
         flex: 1,
       }}>
@@ -37,7 +24,6 @@ export default function Home({navigation, route}) {
           justifyContent: 'flex-end',
         }}>
         <Text>{route.param} </Text>
-        {/* <Text> {navigation.getParam()} </Text> */}
       </View>
 
       <View style={{flex: 2, backgroundColor: 'white'}}>
@@ -53,13 +39,15 @@ export default function Home({navigation, route}) {
           logoBackgroundColor={'transparent'}
         />
 
-        <Text> Welcome {user.displayName}</Text>
-
-        <Text> Welcome </Text>
+        <Text> Welcome {user ? user.displayName : 'hi'} </Text>
 
         {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
         {/* <Button title="Log out" onPress={() => logout()} /> */}
-        <FormButton buttonTitle="Logout" onPress={() => logout()} />
+        {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
+        <FormButton
+          buttonTitle="Logout"
+          onPress={() => LoadLogin(navigation, logout)}
+        />
 
         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
       </View>
@@ -67,66 +55,6 @@ export default function Home({navigation, route}) {
   );
 }
 
-// const Home = ({navigation, route}) => {
-
-//   if (route.params){
-//       console.log(route.params);
-//     } else {
-//       console.log("nah");
-//       console.log(route.params);
-
-//     }
-
-//   return (
-//     <View style={{
-//       // Try setting `flexDirection` to `"row"`.
-//       flexDirection: "column",
-//       flex: 1,
-
-//     }}>
-//       <View style={{flex: 0.3, backgroundColor: "grey", justifyContent: "flex-end"}}>
-//         <Text>hi </Text>
-//         {/* <Text> {navigation.getParam()} </Text> */}
-//       </View>
-
-//       <View style={{flex: 2, backgroundColor: "white"}}>
-
-//         <Button title="Log out" onPress={() => navigation.navigate('Login')} />
-//         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
-//       </View>
-//     </View>
-//   );
-// };
-
-// function Home({navigation, route}) {
-//   // const {userEmail, otherParam} = route.params;
-//   //const text = navigation.getParam('userEmail','nothing sent')
-//   // const {userEmail} = route.params;
-
-//   if (route.params?.name){
-//     console.log("sent it");
-//   }
-
-//   return (
-//     <View style={{
-//       // Try setting `flexDirection` to `"row"`.
-//       flexDirection: "column",
-//       flex: 1,
-//     }}>
-
-//       <View style={{flex: 0.3, backgroundColor: "grey", justifyContent: "flex-end"}}>
-//         <Text>Hi! </Text>
-//         {/* <Text> {navigation.getParam()} </Text> */}
-//       </View>
-
-//       <View style={{flex: 2, backgroundColor: "white"}}>
-
-//         <Button title="Log out" onPress={() => navigation.navigate('Login')} />
-//         {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
-//       </View>
-//     </View>
-//   );
-// };
-
-//export default Home();
-// export default Home;
+const LoadLogin = (navigation, logout) => {
+  logout();
+};

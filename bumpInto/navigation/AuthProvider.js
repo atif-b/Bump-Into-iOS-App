@@ -1,11 +1,14 @@
 import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
+
 // import Providers from './index';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  // const navigation = useNavigation();
 
   return (
     <AuthContext.Provider
@@ -37,6 +40,7 @@ export const AuthProvider = ({children}) => {
             await auth()
               .signOut()
               .then(() => console.log('User Signed out!'));
+            // .then(() => navigation.navigate('Login'));
           } catch (e) {
             console.log('Error while logging out: ' + e);
           }

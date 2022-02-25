@@ -24,53 +24,5 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return <Providers />;
 };
-// const {user, setUser} = useContext(AuthContext);
-// const [initializing, setInitializing] = useState(true);
-
-// const onAuthStateChanged = (user) => {
-//   setUser(user);
-//   if(initializing) setInitializing(false);
-// }
-
-// useEffect(() => {
-//   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-//   return subscriber; // unsubscribe on unmount
-// }, []);
-
-// // if (initializing) return null;
-
-// return (
-//   <NavigationContainer>
-//     <Stack.Navigator
-//       screenOptions={{
-//         // headerShown: false,
-//       }}>
-//       <Stack.Screen name="PreLogin" component={PreLogin} options={{headerShown: false,}}/>
-//       <Stack.Screen name="Login" component={Login} options={{headerShown: false,}} />
-//       <Stack.Screen name="Register" component={Register} options={({navigation}) => ({
-//         title: '',
-//         headerStyle: {
-//           backgroundColor: '#efefef',
-//           elevation: 0,
-//           shadowOpacity: 0,
-//           borderBottomWidth: 0,
-//         },
-//         headerShadowVisible: false, // applied here
-//         headerLeft: () => (
-//           <TouchableOpacity onPress={() => navigation.goBack() }>
-//             <View>
-//             <Ionicons size={25} name="arrow-back-outline"></Ionicons>
-//             </View>
-//           </TouchableOpacity>
-//         )
-//       })} />
-//       <Stack.Screen name="Home" component={Tabs} options={{headerShown: false,}} />
-//       <Stack.Screen name="Profile" component={Profile} options={{headerShown: false,}} />
-
-//     </Stack.Navigator>
-//     {/* <Tabs /> */}
-//   </NavigationContainer>
-// );
-// };
 
 export default App;

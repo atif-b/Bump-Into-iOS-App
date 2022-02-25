@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import auth from '@react-native-firebase/auth';
 import {AuthContext} from './AuthProvider';
@@ -20,11 +21,31 @@ import Tabs from './BottomTab';
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
-  // const [isFirstlaunch, setIsFirstLaunch] = useState(null);
-  // let routeName;
+  const [isFirstlaunch, setIsFirstLaunch] = useState(null);
+  let routeName;
+
+  useEffect(() => {
+    AsyncStorage.getItem('alreadyLaunched').then(value => {
+      if (value == null) {
+        AsyncStorage.setItem('alreadyLaunched', 'true');
+        setIsFirstLaunch(true);
+      } else {
+        setIsFirstLaunch(false);
+      }
+    });
+  }, []);
+
+  if (isFirstlaunch == null) {
+    return null;
+  } else if (isFirstlaunch == true) {
+    routeName = 'PreLogin';
+  } else {
+    routeName = 'Login';
+  }
 
   return (
     <Stack.Navigator
+      initialRouteName={routeName}
       screenOptions={
         {
           // headerShown: false,
@@ -61,11 +82,11 @@ const AuthStack = () => {
           ),
         })}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Home"
         component={Tabs}
         options={{headerShown: false}}
-      />
+      /> */}
     </Stack.Navigator>
     // {/* <Tabs /> */}
   );
