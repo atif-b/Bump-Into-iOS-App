@@ -10,7 +10,7 @@ import auth from '@react-native-firebase/auth';
 import {HomeBox, HomeBtn, BtnTxt, LogoutBtn} from '../styles/HomeStyles';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function Home({navigation, route}) {
+export default function Chats({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 
   return (
@@ -31,7 +31,7 @@ export default function Home({navigation, route}) {
       </View>
 
       <HomeBox>
-        <TouchableOpacity onPress={() => navigation.navigate('Chats')}>
+        <TouchableOpacity>
           <LinearGradient
             colors={[
               '#6D83FB',

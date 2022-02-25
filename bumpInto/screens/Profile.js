@@ -53,6 +53,7 @@ const Profile = ({navigation}) => {
                   source={require('../assets/icons/qr-code.png')}
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
@@ -63,13 +64,13 @@ const Profile = ({navigation}) => {
                   source={require('../assets/icons/bump.png')}
                 />
               </TouchableOpacity>
-              {/* <Text style={styles.msgBtn}>Message</Text> */}
+
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  alert('you clicked message button');
+                  alert('you clicked Edit button');
                 }}>
-                <Text style={styles.msgBtn}>Message</Text>
+                <Text style={styles.msgBtn}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
           </View>
