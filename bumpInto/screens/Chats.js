@@ -7,7 +7,12 @@ import QRCode from 'react-native-qrcode-svg';
 import {AuthContext} from '../navigation/AuthProvider';
 import FormButton from '../components/FormButton';
 import auth from '@react-native-firebase/auth';
-import {HomeBox, HomeBtn, BtnTxt, LogoutBtn} from '../styles/HomeStyles';
+import {
+  ChatBox,
+  ChatTile,
+  TileTxtMain,
+  TileTxtSub,
+} from '../styles/ChatsStyles';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function Chats({navigation, route}) {
@@ -26,95 +31,36 @@ export default function Chats({navigation, route}) {
           justifyContent: 'flex-end',
         }}>
         <Text style={{fontSize: 24, padding: 15, paddingBottom: 15}}>
-          Hi {user ? user.displayName : 'user-logged-out'} !
+          Messages
         </Text>
       </View>
 
-      <HomeBox>
+      <ChatBox>
         <TouchableOpacity>
-          <LinearGradient
-            colors={[
-              '#6D83FB',
-              'rgba(94, 214, 163, 0.8)',
-              'rgba(214, 242, 180, 0.5)',
-              'rgba(248, 250, 185, 0.4)',
-              'rgba(241, 78, 67, 0.2)',
-            ]}
-            style={styles.linearGradient}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            style={styles.moduleColor}
-            locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-            <HomeBtn>
-              <BtnTxt> View chats </BtnTxt>
-            </HomeBtn>
-          </LinearGradient>
+          <ChatTile>
+            <TileTxtMain> Tom </TileTxtMain>
+            <TileTxtSub> 3 new messages </TileTxtSub>
+          </ChatTile>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <LinearGradient
-            colors={[
-              '#6D83FB',
-              'rgba(94, 214, 163, 0.8)',
-              'rgba(214, 242, 180, 0.5)',
-              'rgba(248, 250, 185, 0.4)',
-              'rgba(241, 78, 67, 0.2)',
-            ]}
-            style={styles.linearGradient}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            style={styles.moduleColor}
-            locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-            <HomeBtn>
-              <BtnTxt> Scan QR </BtnTxt>
-            </HomeBtn>
-          </LinearGradient>
+          <ChatTile>
+            <TileTxtMain> Scan QR </TileTxtMain>
+          </ChatTile>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <LinearGradient
-            colors={[
-              '#6D83FB',
-              'rgba(94, 214, 163, 0.8)',
-              'rgba(214, 242, 180, 0.5)',
-              'rgba(248, 250, 185, 0.4)',
-              'rgba(241, 78, 67, 0.2)',
-            ]}
-            style={styles.linearGradient}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            style={styles.moduleColor}
-            locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-            <HomeBtn>
-              <BtnTxt> Bumped </BtnTxt>
-            </HomeBtn>
-          </LinearGradient>
+          <ChatTile>
+            <TileTxtMain> Bumped </TileTxtMain>
+          </ChatTile>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <LinearGradient
-            colors={[
-              '#6D83FB',
-              'rgba(94, 214, 163, 0.8)',
-              'rgba(214, 242, 180, 0.5)',
-              'rgba(248, 250, 185, 0.4)',
-              'rgba(241, 78, 67, 0.2)',
-            ]}
-            style={styles.linearGradient}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0.5}}
-            style={styles.moduleColor}
-            locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-            <HomeBtn>
-              <BtnTxt> My Profile </BtnTxt>
-            </HomeBtn>
-          </LinearGradient>
+          <ChatTile>
+            <TileTxtMain> My Profile </TileTxtMain>
+          </ChatTile>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => LoadLogin(navigation, logout)}>
-          <LogoutBtn>Logout</LogoutBtn>
-        </TouchableOpacity>
-      </HomeBox>
+      </ChatBox>
 
       {/* <View style={{flex: 0.3, backgroundColor: '#f4f4f4'}}> */}
       {/* <QRCode

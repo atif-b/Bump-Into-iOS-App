@@ -3,6 +3,7 @@ import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
+import Chats from '../screens/Chats';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -36,6 +37,16 @@ const Tabs = (navigation, route) => {
           tabBarIcon: ({color, size}) => (
             <Ionicons name="person-outline" color={color} size={size} />
           ),
+        }}
+      />
+
+      {/* this is not shown on the bottom tab but it is added to bottom 
+      bar so that when i nav to this page it still shows the bottom bar */}
+      <Tab.Screen
+        name="Chats"
+        component={Chats}
+        options={{
+          tabBarButton: props => null,
         }}
       />
     </Tab.Navigator>
