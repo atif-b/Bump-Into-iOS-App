@@ -7,7 +7,7 @@ export const HomeBox = styled.View`
   margin-bottom: 10px;
   flex: 2;
   align-content: center;
-  padding-top: 70px;
+  padding-top: 30px;
 `;
 
 export const HomeBtn = styled.View`

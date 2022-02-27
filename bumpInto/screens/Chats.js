@@ -1,5 +1,12 @@
 import React, {useContext} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+  Image,
+} from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -9,9 +16,12 @@ import FormButton from '../components/FormButton';
 import auth from '@react-native-firebase/auth';
 import {
   ChatBox,
-  ChatTile,
+  ChatTileUnread,
+  ChatTileRead,
   TileTxtMain,
   TileTxtSub,
+  PfpImage,
+  PfpView,
 } from '../styles/ChatsStyles';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -37,28 +47,33 @@ export default function Chats({navigation, route}) {
 
       <ChatBox>
         <TouchableOpacity>
-          <ChatTile>
+          <ChatTileUnread>
             <TileTxtMain> Tom </TileTxtMain>
             <TileTxtSub> 3 new messages </TileTxtSub>
-          </ChatTile>
+            <PfpView>
+              <PfpImage source={require('../assets/testPFP.jpg')} />
+            </PfpView>
+          </ChatTileUnread>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <ChatTile>
-            <TileTxtMain> Scan QR </TileTxtMain>
-          </ChatTile>
+          <ChatTileUnread>
+            <TileTxtMain> Sally </TileTxtMain>
+            <TileTxtSub> 1 new messages </TileTxtSub>
+            <PfpView>
+              <PfpImage source={require('../assets/testPFP.jpg')} />
+            </PfpView>
+          </ChatTileUnread>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <ChatTile>
-            <TileTxtMain> Bumped </TileTxtMain>
-          </ChatTile>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <ChatTile>
-            <TileTxtMain> My Profile </TileTxtMain>
-          </ChatTile>
+          <ChatTileRead>
+            <TileTxtMain> Sam </TileTxtMain>
+            <TileTxtSub> Nope not yet </TileTxtSub>
+            <PfpView>
+              <PfpImage source={require('../assets/testPFP.jpg')} />
+            </PfpView>
+          </ChatTileRead>
         </TouchableOpacity>
       </ChatBox>
 

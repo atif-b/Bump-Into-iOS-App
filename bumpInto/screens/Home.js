@@ -106,6 +106,26 @@ export default function Home({navigation, route}) {
             style={styles.moduleColor}
             locations={[0.2, 0.4, 0.7, 0.8, 1]}>
             <HomeBtn>
+              <BtnTxt> Friends </BtnTxt>
+            </HomeBtn>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <LinearGradient
+            colors={[
+              '#6D83FB',
+              'rgba(94, 214, 163, 0.8)',
+              'rgba(214, 242, 180, 0.5)',
+              'rgba(248, 250, 185, 0.4)',
+              'rgba(241, 78, 67, 0.2)',
+            ]}
+            style={styles.linearGradient}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0.5}}
+            style={styles.moduleColor}
+            locations={[0.2, 0.4, 0.7, 0.8, 1]}>
+            <HomeBtn>
               <BtnTxt> My Profile </BtnTxt>
             </HomeBtn>
           </LinearGradient>
