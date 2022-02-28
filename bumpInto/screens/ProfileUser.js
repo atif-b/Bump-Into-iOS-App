@@ -29,7 +29,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-const Profile = ({navigation}) => {
+const ProfileUser = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
 
   return (
@@ -47,7 +47,7 @@ const Profile = ({navigation}) => {
 
         <View style={styles.headerTile}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.headerTileMain]}>{user.displayName}</Text>
+            <Text style={[styles.headerTileMain]}>Sam Smith</Text>
             <Text style={{color: '#efaffc'}}>3rd</Text>
             <View
               style={{
@@ -143,7 +143,8 @@ const Profile = ({navigation}) => {
           <ProfileBox>
             <SocialTabTitle>About me </SocialTabTitle>
             <AboutMeText>
-              Busy creating 'Bump Into' app using react native!
+              I'm one of the first users (other then the admin) to use Bump
+              Into!
             </AboutMeText>
           </ProfileBox>
 
@@ -157,7 +158,7 @@ const Profile = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText> #Taf1789 </SocialText>
+                <SocialText> #Sam1789 </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -172,7 +173,7 @@ const Profile = ({navigation}) => {
 
                 <LineSplit />
                 <SocialText style={{fontSize: 13, left: 5}}>
-                  w1736608@my.westminster.ac.uk
+                  w1737709@my.westminster.ac.uk
                 </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
@@ -187,7 +188,7 @@ const Profile = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText>atif-b</SocialText>
+                <SocialText>sam-s</SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -197,25 +198,19 @@ const Profile = ({navigation}) => {
           <InterestBox>
             <SocialTabTitle>Interests</SocialTabTitle>
             <InterestBubble>
-              <InterestBubbleText>Call Of Duty</InterestBubbleText>
+              <InterestBubbleText>Fifa</InterestBubbleText>
             </InterestBubble>
             <InterestBubble>
-              <InterestBubbleText>Lofi</InterestBubbleText>
+              <InterestBubbleText>HipHop</InterestBubbleText>
             </InterestBubble>
             <InterestBubble>
-              <InterestBubbleText>Basketball</InterestBubbleText>
+              <InterestBubbleText>Football</InterestBubbleText>
             </InterestBubble>
             <InterestBubble>
-              <InterestBubbleText>Crypto</InterestBubbleText>
+              <InterestBubbleText>Gym</InterestBubbleText>
             </InterestBubble>
             <InterestBubble>
-              <InterestBubbleText>Video Editing</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Coding</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>React Native</InterestBubbleText>
+              <InterestBubbleText>Hiking</InterestBubbleText>
             </InterestBubble>
           </InterestBox>
         </View>
@@ -239,7 +234,7 @@ const Profile = ({navigation}) => {
   );
 };
 
-export default Profile;
+export default ProfileUser;
 
 const copyToClipboard = () => {
   Clipboard.setString('#Taf1789');

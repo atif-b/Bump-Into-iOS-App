@@ -9,6 +9,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Chats from '../screens/Chats';
+import Friends from '../screens/Friends';
+import ProfileUser from '../screens/ProfileUser';
+
 import Tabs from './BottomTab';
 
 const Stack = createStackNavigator();
@@ -25,6 +28,18 @@ const AppStack = () => {
       <Stack.Screen
         name="Chats"
         component={Chats}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Friends"
+        component={Friends}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ProfileUser"
+        component={ProfileUser}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

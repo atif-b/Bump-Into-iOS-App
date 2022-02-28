@@ -46,7 +46,10 @@ export default function Chats({navigation, route}) {
       </View>
 
       <ChatBox>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            alert('you clicked message button');
+          }}>
           <ChatTileUnread>
             <TileTxtMain> Tom </TileTxtMain>
             <TileTxtSub> 3 new messages </TileTxtSub>
@@ -56,7 +59,10 @@ export default function Chats({navigation, route}) {
           </ChatTileUnread>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            alert('you clicked message button');
+          }}>
           <ChatTileUnread>
             <TileTxtMain> Sally </TileTxtMain>
             <TileTxtSub> 1 new messages </TileTxtSub>
@@ -66,7 +72,10 @@ export default function Chats({navigation, route}) {
           </ChatTileUnread>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            alert('you clicked message button');
+          }}>
           <ChatTileRead>
             <TileTxtMain> Sam </TileTxtMain>
             <TileTxtSub> Nope not yet </TileTxtSub>

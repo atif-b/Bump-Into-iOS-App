@@ -91,7 +91,7 @@ export default function Home({navigation, route}) {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Friends')}>
           <LinearGradient
             colors={[
               '#6D83FB',
@@ -170,9 +170,9 @@ const LoadLogin = (navigation, logout) => {
 
 const styles = StyleSheet.create({
   moduleColor: {
-    borderRadius: 7,
+    borderRadius: 14,
     marginRight: 2,
-    borderWidth: 5,
+    borderWidth: 3,
     marginBottom: 10,
   },
 });

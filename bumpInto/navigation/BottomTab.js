@@ -4,6 +4,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Chats from '../screens/Chats';
+import Friends from '../screens/Friends';
+import ProfileUser from '../screens/ProfileUser';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
@@ -45,6 +48,20 @@ const Tabs = (navigation, route) => {
       <Tab.Screen
         name="Chats"
         component={Chats}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+      <Tab.Screen
+        name="Friends"
+        component={Friends}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+      <Tab.Screen
+        name="ProfileUser"
+        component={ProfileUser}
         options={{
           tabBarButton: props => null,
         }}
