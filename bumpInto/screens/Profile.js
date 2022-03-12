@@ -7,12 +7,15 @@ import {
   Button,
   Image,
   ScrollView,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
+  BannerImage,
   ProfileBox,
   SocialTab,
   CopyIcon,
@@ -29,21 +32,30 @@ import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 
+// // // // // // // TO DO // // // // // // //
+// Bump button functionality
+// Qr button functionality
+// Decide if I still need module 'buttons'?
+// Fix copy to clipboard
+//
+// LUX
+// When a user is
+// // // // // // // // // // // // // // // //
+
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
 
   return (
-    // <ScrollView>
-    <View
+    //add SafeAreaView tag here if i dont want the background img covering past notch.
+    <ScrollView
       style={{
-        // Try setting `flexDirection` to `"row"`.
         flexDirection: 'column',
         flex: 1,
       }}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={{flex: 3, backgroundColor: '#aba'}}>
+        <BannerImage>
           <Text>Background img</Text>
-        </View>
+        </BannerImage>
 
         <View style={styles.headerTile}>
           <View style={{flexDirection: 'row'}}>
@@ -83,7 +95,7 @@ const Profile = ({navigation}) => {
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  alert('you clicked Edit button');
+                  navigation.navigate('EditProfile');
                 }}>
                 <Text style={styles.msgBtn}>Edit Profile</Text>
               </TouchableOpacity>
@@ -234,8 +246,7 @@ const Profile = ({navigation}) => {
         }}>
         <PfpImage source={require('../assets/testPFP.jpg')} />
       </View>
-    </View>
-    // </ScrollView>
+    </ScrollView>
   );
 };
 
@@ -248,6 +259,15 @@ const copyToClipboard = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // paddingTop: StatusBar.currentHeight,
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    // marginHorizontal: 20,
+  },
+
   headerTile: {
     backgroundColor: '#f5f5f5',
     paddingTop: 45,

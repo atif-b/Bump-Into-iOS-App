@@ -10,6 +10,10 @@ import auth from '@react-native-firebase/auth';
 import {HomeBox, HomeBtn, BtnTxt, LogoutBtn} from '../styles/HomeStyles';
 import LinearGradient from 'react-native-linear-gradient';
 
+// // // // // // // TO DO // // // // // // //
+// Make this scrollable?? --> test app on different phones
+// // // // // // // // // // // // // // // //
+
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 

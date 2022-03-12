@@ -22,13 +22,25 @@ import {
   TileTxtSub,
   PfpImage,
   PfpView,
+  ScrollView,
+  SafeAreaView,
 } from '../styles/ChatsStyles';
 import LinearGradient from 'react-native-linear-gradient';
+
+//Turn 'To Do' into ABOUT, to explain what the file does.
+
+// // // // // // // TO DO // // // // // // //
+// Need to make this scrollable
+// Connect message buttons to base chat screen
+// Need to only show messages for the logged in user
+// Somehow define read/unread messages
+// // // // // // // // // // // // // // // //
 
 export default function Chats({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 
   return (
+    //NEED TO MAKE THIS SCROLLABLE
     <View
       style={{
         flexDirection: 'column',

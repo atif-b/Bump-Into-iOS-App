@@ -29,6 +29,15 @@ import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 
+// // // // // // // TO DO // // // // // // //
+// retrieve 'clicked' user's profile and display it
+// LUX
+// When a user views a profile, they can scroll down to interest
+// --> Interests that both users share could be highlighted in a different colour?
+// --> This depends on if users type interests themselves... could still implement this
+// --> It may not be finished but can help create new 'links' between strangers.
+// // // // // // // // // // // // // // // //
+
 const ProfileUser = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
 

@@ -11,6 +11,7 @@ import Profile from '../screens/Profile';
 import Chats from '../screens/Chats';
 import Friends from '../screens/Friends';
 import ProfileUser from '../screens/ProfileUser';
+import EditProfile from '../screens/EditProfile';
 
 import Tabs from './BottomTab';
 
@@ -40,6 +41,12 @@ const AppStack = () => {
       <Stack.Screen
         name="ProfileUser"
         component={ProfileUser}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

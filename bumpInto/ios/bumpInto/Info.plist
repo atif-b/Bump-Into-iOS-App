@@ -36,7 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>BumpInto app requires location when using the app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>BumpInto app requires photo library access.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>BumpInto app requires camera access.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

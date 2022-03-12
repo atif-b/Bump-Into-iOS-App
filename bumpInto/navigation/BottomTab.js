@@ -6,6 +6,7 @@ import Profile from '../screens/Profile';
 import Chats from '../screens/Chats';
 import Friends from '../screens/Friends';
 import ProfileUser from '../screens/ProfileUser';
+import EditProfile from '../screens/EditProfile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -62,6 +63,13 @@ const Tabs = (navigation, route) => {
       <Tab.Screen
         name="ProfileUser"
         component={ProfileUser}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+      <Tab.Screen
+        name="EditProfile"
+        component={EditProfile}
         options={{
           tabBarButton: props => null,
         }}
