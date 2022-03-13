@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   View,
@@ -14,12 +14,20 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import {EditView, PfpImage, BannerImage} from '../styles/EditProfileStyles';
 import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ImagePicker from 'react-native-image-crop-picker';
 
+// // // // // // // TO DO // // // // // // //
+// Fix useState image
+// --> when using image as source it works
+// --> when photo is chosen, setImage does not work
+// // // // // // // // // // // // // // // //
+
 const EditProfile = ({navigation}) => {
+  const [image, setImage] = useState(require('../assets/testPFP.jpg'));
   const {user, logout} = useContext(AuthContext);
 
   return (
@@ -38,11 +46,16 @@ const EditProfile = ({navigation}) => {
           <Text style={{fontSize: 24, padding: 15, paddingBottom: 15}}>
             Edit your profile
           </Text>
+        </View>
 
+        <EditView>
           <TouchableOpacity onPress={() => choosePhotoFromLibary()}>
             <Text>hihihihihihihi</Text>
           </TouchableOpacity>
-        </View>
+
+          <PfpImage source={image} />
+          <BannerImage source={image} />
+        </EditView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -63,9 +76,14 @@ const choosePhotoFromLibary = () => {
     height: 100,
     cropping: true,
     cropperCircleOverlay: true,
-  }).then(image => {
-    console.log(image);
-  });
+  })
+    .then(image => {
+      console.log(image);
+      setImage(image.path);
+    })
+    .catch(err => {
+      console.log('error!!!');
+    });
 };
 
 const styles = StyleSheet.create({
