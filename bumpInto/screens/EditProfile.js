@@ -21,14 +21,46 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import ImagePicker from 'react-native-image-crop-picker';
 
 // // // // // // // TO DO // // // // // // //
-// Fix useState image
-// --> when using image as source it works
-// --> when photo is chosen, setImage does not work
+// For now the images are clickable to change them
+// Maybe make a button for change banner and change pfp
+// Need to fix banner size and cropping
 // // // // // // // // // // // // // // // //
 
 const EditProfile = ({navigation}) => {
   const [image, setImage] = useState(require('../assets/testPFP.jpg'));
+  const [imageB, setImageB] = useState(require('../assets/testPFP.jpg'));
   const {user, logout} = useContext(AuthContext);
+
+  const choosePhotoFromLibraryPfp = () => {
+    ImagePicker.openPicker({
+      width: 100,
+      height: 100,
+      cropping: true,
+      cropperCircleOverlay: true,
+    })
+      .then(image => {
+        console.log(image.path);
+        setImage({uri: image.path});
+      })
+      .catch(err => {
+        console.log('error!!! ---- ' + err.toString());
+      });
+  };
+
+  const choosePhotoFromLibraryBanner = () => {
+    ImagePicker.openPicker({
+      width: 100,
+      height: 130,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image.path);
+        setImageB({uri: image.path});
+      })
+      .catch(err => {
+        console.log('error!!! ---- ' + err.toString());
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,12 +81,13 @@ const EditProfile = ({navigation}) => {
         </View>
 
         <EditView>
-          <TouchableOpacity onPress={() => choosePhotoFromLibary()}>
-            <Text>hihihihihihihi</Text>
+          <TouchableOpacity onPress={() => choosePhotoFromLibraryBanner()}>
+            <BannerImage source={imageB} />
           </TouchableOpacity>
 
-          <PfpImage source={image} />
-          <BannerImage source={image} />
+          <TouchableOpacity onPress={() => choosePhotoFromLibraryPfp()}>
+            <PfpImage source={image} />
+          </TouchableOpacity>
         </EditView>
       </ScrollView>
     </SafeAreaView>
@@ -79,10 +112,10 @@ const choosePhotoFromLibary = () => {
   })
     .then(image => {
       console.log(image);
-      setImage(image.path);
+      setImage(require('../assets/icons/pfp.png'));
     })
     .catch(err => {
-      console.log('error!!!');
+      console.log('error!!! ---- ' + err.toString());
     });
 };
 
