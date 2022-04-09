@@ -45,6 +45,10 @@ import Clipboard from '@react-native-clipboard/clipboard';
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
 
+  user.providerData.forEach(userInfo => {
+    console.log(userInfo);
+  });
+
   return (
     //add SafeAreaView tag here if i dont want the background img covering past notch.
     <ScrollView

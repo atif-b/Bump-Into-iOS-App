@@ -24,12 +24,18 @@ import ImagePicker from 'react-native-image-crop-picker';
 // For now the images are clickable to change them
 // Maybe make a button for change banner and change pfp
 // Need to fix banner size and cropping
+// console.log to fetch user data does not show the photo url
+// --> Maybe i need to specify that i want to request the url?
 // // // // // // // // // // // // // // // //
 
 const EditProfile = ({navigation}) => {
   const [image, setImage] = useState(require('../assets/testPFP.jpg'));
   const [imageB, setImageB] = useState(require('../assets/testPFP.jpg'));
   const {user, logout} = useContext(AuthContext);
+
+  user.providerData.forEach(userInfo => {
+    console.log('user info: ', userInfo);
+  });
 
   const choosePhotoFromLibraryPfp = () => {
     ImagePicker.openPicker({
@@ -41,6 +47,10 @@ const EditProfile = ({navigation}) => {
       .then(image => {
         console.log(image.path);
         setImage({uri: image.path});
+        const update = {
+          photoURL: image,
+        };
+        test1();
       })
       .catch(err => {
         console.log('error!!! ---- ' + err.toString());
@@ -56,10 +66,24 @@ const EditProfile = ({navigation}) => {
       .then(image => {
         console.log(image.path);
         setImageB({uri: image.path});
+        const update = {
+          displayName: 'Test Butt',
+          photoURL: image,
+        };
+
+        test1();
+        console.log(user.photoURL);
       })
       .catch(err => {
         console.log('error!!! ---- ' + err.toString());
       });
+  };
+
+  const update = {
+    photoURL: image,
+  };
+  const test1 = async () => {
+    await auth().currentUser.updateProfile(update);
   };
 
   return (
@@ -102,22 +126,22 @@ const copyToClipboard = () => {
   alert('Coppied to clipboard!');
 };
 
-const choosePhotoFromLibary = () => {
-  //console.warn('yea');
-  ImagePicker.openPicker({
-    width: 100,
-    height: 100,
-    cropping: true,
-    cropperCircleOverlay: true,
-  })
-    .then(image => {
-      console.log(image);
-      setImage(require('../assets/icons/pfp.png'));
-    })
-    .catch(err => {
-      console.log('error!!! ---- ' + err.toString());
-    });
-};
+// const choosePhotoFromLibary = () => {
+//   //console.warn('yea');
+//   ImagePicker.openPicker({
+//     width: 100,
+//     height: 100,
+//     cropping: true,
+//     cropperCircleOverlay: true,
+//   })
+//     .then(image => {
+//       console.log(image);
+//       setImage(require('../assets/icons/pfp.png'));
+//     })
+//     .catch(err => {
+//       console.log('error!!! ---- ' + err.toString());
+//     });
+// };
 
 const styles = StyleSheet.create({
   container: {
