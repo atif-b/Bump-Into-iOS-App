@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -19,6 +19,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ImagePicker from 'react-native-image-crop-picker';
+import firestore from '@react-native-firebase/firestore';
 
 // // // // // // // TO DO // // // // // // //
 // For now the images are clickable to change them
@@ -32,6 +33,23 @@ const EditProfile = ({navigation}) => {
   const [image, setImage] = useState(require('../assets/testPFP.jpg'));
   const [imageB, setImageB] = useState(require('../assets/testPFP.jpg'));
   const {user, logout} = useContext(AuthContext);
+  const usersCollection = firestore().collection('users');
+  // const check = firestore()
+  //   .collection('users')
+  //   .where('firstName', '==', 'Atif')
+  //   .get();
+
+  const check = firestore()
+    .collection('collection')
+    .onSnapshot(querySnapshot => {
+      console.log(querySnapshot);
+    });
+
+  console.log('*****');
+  console.log(usersCollection);
+
+  console.log(check);
+  console.log('*****');
 
   user.providerData.forEach(userInfo => {
     console.log('user info: ', userInfo);
