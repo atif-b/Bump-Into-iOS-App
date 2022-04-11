@@ -25,37 +25,73 @@ import firestore from '@react-native-firebase/firestore';
 // For now the images are clickable to change them
 // Maybe make a button for change banner and change pfp
 // Need to fix banner size and cropping
-// console.log to fetch user data does not show the photo url
-// --> Maybe i need to specify that i want to request the url?
+
+// Pfp update is being stored as a 'map'?
+//
 // // // // // // // // // // // // // // // //
 
 const EditProfile = ({navigation}) => {
-  const [image, setImage] = useState(require('../assets/testPFP.jpg'));
-  const [imageB, setImageB] = useState(require('../assets/testPFP.jpg'));
+  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  const [imageBanner, setImageBanner] = useState(
+    require('../assets/testPFP.jpg'),
+  );
+  const [imagePfpTest, setimagePfpTest] = useState(null);
   const {user, logout} = useContext(AuthContext);
-  const usersCollection = firestore().collection('users');
-  // const check = firestore()
+
+  ////CODE TO ADD A USER TO FIRESTORE/////
+
+  // firestore()
   //   .collection('users')
-  //   .where('firstName', '==', 'Atif')
-  //   .get();
+  //   .add({
+  //     firstName: 'AtifTEST',
+  //     lastName: 'ButtTEST',
+  //     email: 'w123@my.westminster.ac.uk',
+  //     pfp: 'test',
+  //     banner: 'testBanner',
+  //   })
+  //   .then(() => {
+  //     console.log('user added!');
+  //   });
 
-  const check = firestore()
-    .collection('collection')
-    .onSnapshot(querySnapshot => {
-      console.log(querySnapshot);
-    });
+  ////
 
-  console.log('*****');
-  console.log(usersCollection);
+  ////CODE TO GET USER FROM FIRESTORE/////
 
-  console.log(check);
-  console.log('*****');
+  // firestore()
+  //     .collection('users')
+  //     .where('firstName', '==', 'AtifTEST')
+  //     .get()
+  //     .then(querySnapshot => {
+  //       querySnapshot.forEach(documentSnapshot => {
+  //         console.log('DATA: ', documentSnapshot.get('email'));
+  //       });
+  //     });
 
-  user.providerData.forEach(userInfo => {
-    console.log('user info: ', userInfo);
-  });
+  ////
+
+  /////CODE TO UPDATE USER IN FIRESTORE/////
+
+  // firestore()
+  //     .collection('users')
+  //     .doc('iuWM3WsOJOS1PNHfVjhk')
+  //     .update({
+  //       pfp: 'test1',
+  //     })
+  //     .then(() => {
+  //       console.log('user updated!!!!');
+  //     });
+
+  ///
 
   const choosePhotoFromLibraryPfp = () => {
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        console.log('DATA: ', documentSnapshot.get('pfp'));
+      });
+
     ImagePicker.openPicker({
       width: 100,
       height: 100,
@@ -63,15 +99,15 @@ const EditProfile = ({navigation}) => {
       cropperCircleOverlay: true,
     })
       .then(image => {
-        console.log(image.path);
-        setImage({uri: image.path});
-        const update = {
-          photoURL: image,
-        };
-        test1();
+        console.log('image.path =  ', image.path);
+        setImagePfp({uri: image.path});
+
+        uploadPfp();
+        console.log('pfp image --> ', imagePfp);
+        console.log('******');
       })
       .catch(err => {
-        console.log('error!!! ---- ' + err.toString());
+        console.log('error2!!! ---- ' + err.toString());
       });
   };
 
@@ -82,27 +118,41 @@ const EditProfile = ({navigation}) => {
       cropping: true,
     })
       .then(image => {
-        console.log(image.path);
-        setImageB({uri: image.path});
-        const update = {
-          displayName: 'Test Butt',
-          photoURL: image,
-        };
-
-        test1();
-        console.log(user.photoURL);
+        console.log('image.path(banner) = ', image.path);
+        setImageBanner({uri: image.path});
       })
       .catch(err => {
         console.log('error!!! ---- ' + err.toString());
       });
   };
 
-  const update = {
-    photoURL: image,
+  const uploadPfp = () => {
+    // use useState (image)
+    // update ^ to firestore
+    // where ___ == ____
+
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .update({
+        pfp: imagePfp,
+      })
+      .then(() => {
+        console.log('user pfp updated!');
+      });
   };
-  const test1 = async () => {
-    await auth().currentUser.updateProfile(update);
-  };
+
+  // const uploadBanner = () => {
+  //   firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .update({
+  //       banner: image.sourceURL,
+  //     })
+  //     .then(() => {
+  //       console.log('user pfp updated!');
+  //     });
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -124,12 +174,14 @@ const EditProfile = ({navigation}) => {
 
         <EditView>
           <TouchableOpacity onPress={() => choosePhotoFromLibraryBanner()}>
-            <BannerImage source={imageB} />
+            <BannerImage source={imageBanner} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => choosePhotoFromLibraryPfp()}>
-            <PfpImage source={image} />
+            <PfpImage source={imagePfp} />
           </TouchableOpacity>
+
+          <PfpImage source={imagePfpTest} />
         </EditView>
       </ScrollView>
     </SafeAreaView>
