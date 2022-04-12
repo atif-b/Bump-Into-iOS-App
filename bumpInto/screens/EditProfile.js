@@ -26,17 +26,28 @@ import firestore from '@react-native-firebase/firestore';
 // Maybe make a button for change banner and change pfp
 // Need to fix banner size and cropping
 
-// Pfp update is being stored as a 'map'?
-//
+// So, line 112-115
+// the console log lines change for some reason
+// the image will change for a second then go back to its original
 // // // // // // // // // // // // // // // //
 
 const EditProfile = ({navigation}) => {
-  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  const [imagePfp, setImagePfp] = useState(null);
+  // const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
   const [imageBanner, setImageBanner] = useState(
     require('../assets/testPFP.jpg'),
   );
-  const [imagePfpTest, setimagePfpTest] = useState(null);
   const {user, logout} = useContext(AuthContext);
+  var change = new Boolean(true);
+
+  useEffect(() => {
+    if (change == true) {
+      getPfp();
+      change = false;
+    } else {
+      console.log('not updating');
+    }
+  }, []);
 
   ////CODE TO ADD A USER TO FIRESTORE/////
 
@@ -84,14 +95,6 @@ const EditProfile = ({navigation}) => {
   ///
 
   const choosePhotoFromLibraryPfp = () => {
-    firestore()
-      .collection('users')
-      .doc(user.uid)
-      .get()
-      .then(documentSnapshot => {
-        console.log('DATA: ', documentSnapshot.get('pfp'));
-      });
-
     ImagePicker.openPicker({
       width: 100,
       height: 100,
@@ -99,12 +102,19 @@ const EditProfile = ({navigation}) => {
       cropperCircleOverlay: true,
     })
       .then(image => {
-        console.log('image.path =  ', image.path);
-        setImagePfp({uri: image.path});
+        // console.log('&&&&&&&&&&');
+        // console.log('**** image.path =  ', image.path);
+        // setImagePfp({uri: image.path});
+        // console.log('image pfp ==== ', imagePfp);
+        // uploadPfp();
+        // change = true;
+        // // console.log('pfp image --> ', imagePfp);
+        // console.log('******');
 
-        uploadPfp();
-        console.log('pfp image --> ', imagePfp);
-        console.log('******');
+        setImagePfp({uri: image.path});
+        // uploadPfp();
+        console.log('image path 111', image.path);
+        console.log('image 222', imagePfp);
       })
       .catch(err => {
         console.log('error2!!! ---- ' + err.toString());
@@ -130,7 +140,8 @@ const EditProfile = ({navigation}) => {
     // use useState (image)
     // update ^ to firestore
     // where ___ == ____
-
+    console.log('uploadPfp called');
+    console.log('gonna upload -> ', imagePfp);
     firestore()
       .collection('users')
       .doc(user.uid)
@@ -139,6 +150,19 @@ const EditProfile = ({navigation}) => {
       })
       .then(() => {
         console.log('user pfp updated!');
+        getPfp();
+      });
+  };
+
+  const getPfp = () => {
+    console.log('getPfp called');
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        console.log('GET =  ', documentSnapshot.get('pfp'));
+        setImagePfp(documentSnapshot.get('pfp'));
       });
   };
 
@@ -180,8 +204,6 @@ const EditProfile = ({navigation}) => {
           <TouchableOpacity onPress={() => choosePhotoFromLibraryPfp()}>
             <PfpImage source={imagePfp} />
           </TouchableOpacity>
-
-          <PfpImage source={imagePfpTest} />
         </EditView>
       </ScrollView>
     </SafeAreaView>

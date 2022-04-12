@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -31,6 +31,7 @@ import {
 import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
+import firestore from '@react-native-firebase/firestore';
 
 // // // // // // // TO DO // // // // // // //
 // Bump button functionality
@@ -40,14 +41,36 @@ import Clipboard from '@react-native-clipboard/clipboard';
 //
 // LUX
 // When a user is
+
+// Need to make useEffect to run each time the page is clicked on
+// Maybe do an if statement to see if current 'imagePfp' matches the one
+// that it 'got' from the db, if match do nothing else change pfp!
 // // // // // // // // // // // // // // // //
 
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
+  const [imagePfp, setImagePfp] = useState(null);
 
   user.providerData.forEach(userInfo => {
     console.log(userInfo);
   });
+
+  // When the screen is loaded, below functions are called
+  useEffect(() => {
+    getPfp();
+  }, []);
+
+  const getPfp = () => {
+    console.log('getPfp called');
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        console.log('GET =  ', documentSnapshot.get('pfp'));
+        setImagePfp(documentSnapshot.get('pfp'));
+      });
+  };
 
   return (
     //add SafeAreaView tag here if i dont want the background img covering past notch.
@@ -248,7 +271,7 @@ const Profile = ({navigation}) => {
           top: 70,
           left: 20,
         }}>
-        <PfpImage source={require('../assets/testPFP.jpg')} />
+        <PfpImage source={imagePfp} />
       </View>
     </ScrollView>
   );
