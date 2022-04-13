@@ -182,7 +182,9 @@ const Profile = ({navigation}) => {
           <ProfileBox>
             <SocialTabTitle>About me </SocialTabTitle>
             <AboutMeText>
-              Busy creating 'Bump Into' app using react native!
+              Busy creating 'Bump Into' app using react native! Busy creating
+              'Bump Into' app using react native! Busy creating 'Bump Into' app
+              using react native!
             </AboutMeText>
           </ProfileBox>
 

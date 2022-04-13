@@ -8,6 +8,7 @@ export const EditView = styled.View`
   align-content: center;
   justify-content: center;
   padding-top: 30px;
+  pad
 `;
 
 export const PfpImage = styled.Image`
@@ -19,5 +20,22 @@ export const PfpImage = styled.Image`
 
 export const BannerImage = styled.Image`
   height: 130px;
+  align-self: center;
   flex: 3px;
+`;
+
+export const FormInput = styled.TextInput`
+  background-color: #fff;
+  padding: 20px;
+  margin: 5px 5px;
+  font-size: 16px;
+`;
+
+export const EditTab = styled.View`
+  background-color: #fff;
+  padding: 10px;
+  margin: 3px 10px 3px 10px;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 15px;
 `;

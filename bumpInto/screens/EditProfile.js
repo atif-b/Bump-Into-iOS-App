@@ -14,12 +14,18 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import {EditView, PfpImage, BannerImage} from '../styles/EditProfileStyles';
+import {
+  EditView,
+  PfpImage,
+  BannerImage,
+  FormInput,
+} from '../styles/EditProfileStyles';
 import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ImagePicker from 'react-native-image-crop-picker';
 import firestore from '@react-native-firebase/firestore';
+// import FormInput from '../components/FormInput';
 
 // // // // // // // TO DO // // // // // // //
 // For now the images are clickable to change them
@@ -32,15 +38,22 @@ import firestore from '@react-native-firebase/firestore';
 // // // // // // // // // // // // // // // //
 
 const EditProfile = ({navigation}) => {
-  const [imagePfp, setImagePfp] = useState(null);
-  // const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  // const [imagePfp, setImagePfp] = useState(null);
+  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
   const [imageBanner, setImageBanner] = useState(
     require('../assets/testPFP.jpg'),
   );
   const {user, logout} = useContext(AuthContext);
+
+  const [about, setAbout] = useState();
+  const [password, setPassword] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+
   var change = new Boolean(true);
 
   useEffect(() => {
+    console.log('useEffect');
     if (change == true) {
       getPfp();
       change = false;
@@ -94,14 +107,14 @@ const EditProfile = ({navigation}) => {
 
   ///
 
-  const choosePhotoFromLibraryPfp = () => {
+  const choosePhotoFromLibraryPfp = async () => {
     ImagePicker.openPicker({
       width: 100,
       height: 100,
       cropping: true,
       cropperCircleOverlay: true,
     })
-      .then(image => {
+      .then(async image => {
         // console.log('&&&&&&&&&&');
         // console.log('**** image.path =  ', image.path);
         // setImagePfp({uri: image.path});
@@ -110,11 +123,15 @@ const EditProfile = ({navigation}) => {
         // change = true;
         // // console.log('pfp image --> ', imagePfp);
         // console.log('******');
-
+        change = false;
+        console.log('BEFORE SET - ', imagePfp);
         setImagePfp({uri: image.path});
-        // uploadPfp();
-        console.log('image path 111', image.path);
-        console.log('image 222', imagePfp);
+
+        // setImagePfp(null);
+
+        console.log('AFTER SET - ', imagePfp);
+        console.log('DOES THE ABOVE MATCH THIS?? ', image.path);
+        await uploadPfp();
       })
       .catch(err => {
         console.log('error2!!! ---- ' + err.toString());
@@ -136,7 +153,7 @@ const EditProfile = ({navigation}) => {
       });
   };
 
-  const uploadPfp = () => {
+  const uploadPfp = async () => {
     // use useState (image)
     // update ^ to firestore
     // where ___ == ____
@@ -150,11 +167,10 @@ const EditProfile = ({navigation}) => {
       })
       .then(() => {
         console.log('user pfp updated!');
-        getPfp();
       });
   };
 
-  const getPfp = () => {
+  const getPfp = async () => {
     console.log('getPfp called');
     firestore()
       .collection('users')
@@ -163,7 +179,12 @@ const EditProfile = ({navigation}) => {
       .then(documentSnapshot => {
         console.log('GET =  ', documentSnapshot.get('pfp'));
         setImagePfp(documentSnapshot.get('pfp'));
+        console.log('GET Pfp');
       });
+  };
+
+  const getAll = async () => {
+    //will be used to call and get each profile detail
   };
 
   // const uploadBanner = () => {
@@ -204,6 +225,16 @@ const EditProfile = ({navigation}) => {
           <TouchableOpacity onPress={() => choosePhotoFromLibraryPfp()}>
             <PfpImage source={imagePfp} />
           </TouchableOpacity>
+
+          <FormInput
+            multiline
+            numberOfLines={4}
+            maxLength={160}
+            labelValue={about}
+            onChangeText={userAbout => setAbout(userAbout)}
+            placeholderText="About me" //need to make a useState for this
+            keyboardType="default"
+          />
         </EditView>
       </ScrollView>
     </SafeAreaView>
