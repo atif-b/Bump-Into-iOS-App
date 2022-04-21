@@ -15,6 +15,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../navigation/AuthProvider';
+import firestore from '@react-native-firebase/firestore';
 
 const Register = ({navigation, route}) => {
   const [email, setEmail] = useState();
@@ -134,8 +135,6 @@ const LoginCheck = (
     } else {
       alert('Please use your Westminster email (@my.westminster.ac.uk)');
     }
-    // UNCOMMENT THIS CODE WHEN I NEED TO TEST WESTMINSTER EMAILS
-    // LoadHome(email, navigation);
   }
 };
 

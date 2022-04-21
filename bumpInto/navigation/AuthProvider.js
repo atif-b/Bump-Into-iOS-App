@@ -1,6 +1,7 @@
 import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 // import Providers from './index';
 
@@ -30,9 +31,27 @@ export const AuthProvider = ({children}) => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);
 
+            firestore().collection('users').doc(auth().currentUser.uid).set({
+              banner: 'null',
+              email: email,
+              firstName: firstName,
+              lastName: lastName,
+              pfp: '../assets/icons/pfp.png',
+            });
+
             await auth().currentUser.updateProfile(update);
+            // firestore()
+            //   .collection('users')
+            //   .doc(auth().currentUser.uid)
+            //   .collection('profileDetails')
+            //   .set({
+            //     about: 'Say something about yourself',
+            //     interests: ['coding', 'cooking'],
+            //     modules: ['webdev', 'secfun', 'iosdev'],
+            //     socials: ['instagram', 'discord', 'email'],
+            //   });
           } catch (e) {
-            console.log(e);
+            console.log('error while creating firestore collection: ', e);
           }
         },
         logout: async () => {

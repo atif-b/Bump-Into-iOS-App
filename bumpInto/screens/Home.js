@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import FormButton from '../components/FormButton';
 import auth from '@react-native-firebase/auth';
 import {HomeBox, HomeBtn, BtnTxt, LogoutBtn} from '../styles/HomeStyles';
 import LinearGradient from 'react-native-linear-gradient';
+import firestore from '@react-native-firebase/firestore';
 
 // // // // // // // TO DO // // // // // // //
 // Make this scrollable?? --> test app on different phones
@@ -16,6 +17,48 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
+
+  useEffect(() => {
+    if (checkIfExists() != 1) {
+      createProfileCol();
+      console.log('creating');
+    }
+  }, []);
+
+  const checkIfExists = () => {
+    var exists = 0;
+
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('profileDetails')
+      .get()
+      .then(sub => {
+        if (sub.docs.length > 0) {
+          console.log('exists');
+          exists = 1;
+        } else {
+          console.log('doesnt exits');
+        }
+      });
+
+    return exists;
+  };
+
+  const createProfileCol = () => {
+    // firestore()
+    //   .collection('users')
+    //   .doc(user.uid)
+    //   .collection('profileDetails')
+    //   .set({
+    //     about: 'Say something about yourself',
+    //     interests: ['coding', 'cooking'],
+    //     modules: ['webdev', 'secfun', 'iosdev'],
+    //     socials: ['instagram', 'discord', 'email'],
+    //   });
+  };
+
+  //////////NEED TO DO THE ABOVE, CHECK IF EXISTS, IF IT DOESNT THEN CALL CREATEPROFILE
 
   return (
     <View
