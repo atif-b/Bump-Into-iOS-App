@@ -76,7 +76,7 @@ var socialsArray = ['', '', ''];
 const EditProfile = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(true);
 
-  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  const [imagePfp, setImagePfp] = useState(require('../assets/icons/pfp.png'));
   const [imageBanner, setImageBanner] = useState(
     require('../assets/testPFP.jpg'),
   );
@@ -98,19 +98,45 @@ const EditProfile = ({navigation}) => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalCVisible, setModalCVisible] = useState(false);
+  const [isModalUVisible, setModalUVisible] = useState(false);
+
   const [remInterest, setRemInterest] = useState();
 
   const [modalText, setModalText] = useState('null');
 
+  const [userData, setUserData] = useState(null);
+
   var change = new Boolean(true);
 
-  useEffect(() => {
-    (async () => {
-      await getDocId();
-    })();
+  //////
+  //////
+  //////
 
-    getAll();
-    console.log('useEffect');
+  // console.log(userData.about);
+  // console.log(userData.modules)
+
+  const getUser = async () => {
+    const currentUser = await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          console.log('user data ', documentSnapshot.data());
+          getInterests(documentSnapshot.data());
+          setImagePfp(documentSnapshot.data().pfp);
+          setUserData(documentSnapshot.data());
+        }
+      });
+  };
+
+  //////
+  //////
+  //////
+
+  useEffect(() => {
+    getUser();
+    getInterests();
 
     //when calling all info from db, check how many module vals are provided
     //and set the right amount of modules as true
@@ -193,120 +219,130 @@ const EditProfile = ({navigation}) => {
     await getPfp();
   };
 
-  const getDocId = async () => {
-    console.log('getting doc id');
-    await firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('profileDetails')
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          setDocId(documentSnapshot.id);
-          console.log('====================================');
-          console.log(docId);
-          console.log('====================================');
-        });
-      });
-  };
+  // const getDocId = async () => {
+  //   console.log('getting doc id');
+  //   await firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('profileDetails')
+  //     .get()
+  //     .then(querySnapshot => {
+  //       querySnapshot.forEach(documentSnapshot => {
+  //         setDocId(documentSnapshot.id);
+  //         console.log('====================================');
+  //         console.log(docId);
+  //         console.log('====================================');
+  //       });
+  //     });
+  // };
 
-  const getModules = async () => {
-    console.log('getModules called');
-    getDocId();
+  // const getModules = async () => {
+  //   console.log('getModules called');
+  //   getDocId();
 
-    await firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('profileDetails')
-      .doc(docId)
-      .get()
-      .then(documentSnapshot => {
-        console.log('GET Module ====> ', documentSnapshot.get('modules'));
-        modulesArray = documentSnapshot.get('modules');
+  //   await firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('profileDetails')
+  //     .doc(docId)
+  //     .get()
+  //     .then(documentSnapshot => {
+  //       console.log('GET Module ====> ', documentSnapshot.get('modules'));
+  //       modulesArray = documentSnapshot.get('modules');
 
-        setModule1(modulesArray[0]);
-        setModule2(modulesArray[1]);
-        setModule3(modulesArray[2]);
-        setModule4(modulesArray[3]);
+  //       setModule1(modulesArray[0]);
+  //       setModule2(modulesArray[1]);
+  //       setModule3(modulesArray[2]);
+  //       setModule4(modulesArray[3]);
 
-        // console.log(modulesArray.length);
-      })
-      .catch(function (err) {
-        console.log('error: ', err.message);
-      });
-  };
+  //       // console.log(modulesArray.length);
+  //     })
+  //     .catch(function (err) {
+  //       console.log('error: ', err.message);
+  //     });
+  // };
 
-  const getAbout = async () => {
-    console.log('getAbout called');
-    getDocId();
+  // const getAbout = async () => {
+  //   console.log('getAbout called');
+  //   getDocId();
 
-    await firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('profileDetails')
-      .doc(docId)
-      .get()
-      .then(documentSnapshot => {
-        console.log('GET About ====> ', documentSnapshot.get('about'));
+  //   await firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('profileDetails')
+  //     .doc(docId)
+  //     .get()
+  //     .then(documentSnapshot => {
+  //       console.log('GET About ====> ', documentSnapshot.get('about'));
 
-        setAbout(documentSnapshot.get('about'));
-      });
-  };
+  //       setAbout(documentSnapshot.get('about'));
+  //     });
+  // };
 
-  const getSocials = async () => {
-    console.log('getSocials called');
-    console.log(getDocId());
+  // const getSocials = async () => {
+  //   console.log('getSocials called');
+  //   console.log(getDocId());
 
-    firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('profileDetails')
-      .doc(docId)
-      .get()
-      .then(documentSnapshot => {
-        console.log('GET Social====> ', documentSnapshot.get('socials'));
+  //   firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('profileDetails')
+  //     .doc(docId)
+  //     .get()
+  //     .then(documentSnapshot => {
+  //       console.log('GET Social====> ', documentSnapshot.get('socials'));
 
-        // setAbout(documentSnapshot.get('socials'));
+  //       // setAbout(documentSnapshot.get('socials'));
 
-        socialsArray = documentSnapshot.get('socials');
-        setInstagram(socialsArray[0]);
-        setDiscord(socialsArray[1]);
-        setEmail(socialsArray[2]);
-      })
-      .catch(function (err) {
-        console.log('error: ', err.message);
-      });
-  };
+  //       socialsArray = documentSnapshot.get('socials');
+  //       setInstagram(socialsArray[0]);
+  //       setDiscord(socialsArray[1]);
+  //       setEmail(socialsArray[2]);
+  //     })
+  //     .catch(function (err) {
+  //       console.log('error: ', err.message);
+  //     });
+  // };
 
-  const getInterests = async () => {
+  const getInterests = async allData => {
     console.log('getInterests called');
-    getDocId();
+    console.log('ALL DATA RIGHT???? --> ', allData);
 
-    firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('profileDetails')
-      .doc(docId)
-      .get()
-      .then(documentSnapshot => {
-        console.log('GET ====> ', documentSnapshot.get('interests'));
+    try {
+      for (let i = 0; i < allData.interests.length; i++) {
+        interestArray[i] = allData.interests[i];
+      }
+    } catch (err) {
+      console.log('Error fetching and assinging interests - ', err);
+    }
 
-        if (documentSnapshot.get('interests').length == 10) {
-          interestArray = documentSnapshot.get('interests');
-        } else {
-          for (let i = 0; i < documentSnapshot.get('interests').length; i++) {
-            interestArray[i] = documentSnapshot.get('interests')[i];
-          }
-        }
+    // getDocId();
 
-        this.textInput.clear();
-        setInterest('');
-      })
-      .catch(function (err) {
-        console.log('error: ', err.message);
-      });
-    this.textInput.clear();
-    setInterest('');
+    // firestore()
+    //   .collection('users')
+    //   .doc(user.uid)
+    //   .collection('profileDetails')
+    //   .doc(docId)
+    //   .get()
+    //   .then(documentSnapshot => {
+    //     console.log('GET ====> ', documentSnapshot.get('interests'));
+
+    //     if (documentSnapshot.get('interests').length == 10) {
+    //       interestArray = documentSnapshot.get('interests');
+    //     } else {
+    //       for (let i = 0; i < documentSnapshot.get('interests').length; i++) {
+    //         interestArray[i] = documentSnapshot.get('interests')[i];
+    //       }
+    //     }
+
+    //     this.textInput.clear();
+    //     setInterest('');
+    //   })
+    //   .catch(function (err) {
+    //     console.log('error: ', err.message);
+    //   });
+    // this.textInput.clear();
+    // setInterest('');
   };
 
   const moduleBtnClicked = clicked => {
@@ -373,6 +409,10 @@ const EditProfile = ({navigation}) => {
     }
   };
 
+  const toggleModalU = () => {
+    setModalUVisible(!isModalUVisible);
+  };
+
   const toggleModalC = () => {
     setModalCVisible(!isModalCVisible);
   };
@@ -381,29 +421,115 @@ const EditProfile = ({navigation}) => {
     setModalVisible(!isModalVisible);
   };
 
-  const saveProfile = () => {
-    //pfp
-    //banner
+  const modulesToUserData = () => {
+    try {
+      for (let i = 0; i < modulesArray.length; i++) {
+        userData.modules[i] = modulesArray[i];
+      }
+    } catch (err) {
+      console.log('Error assigning modules to user data :', err);
+    }
+  };
 
-    //modules
-    modulesArray = [module1, module2, module3, module4];
+  const socialsToUserData = () => {
+    try {
+      userData.socials[0] = instagram;
+      userData.socials[1] = discord;
+      userData.socials[2] = email;
+    } catch (err) {
+      console.log('Error assigning socials to user data :', err);
+    }
+  };
+
+  const interestsToUserData = () => {
+    try {
+      for (let i = 0; i < interestArray.length; i++) {
+        userData.interests[i] = interestArray[i];
+      }
+    } catch (err) {
+      console.log('Error assigning interests to user data :', err);
+    }
+  };
+
+  const pfpToUserData = () => {
+    try {
+      userData.pfp = imagePfp;
+    } catch (err) {
+      console.log('Error assigning pfp to user data :', err);
+    }
+  };
+
+  const bannerToUserData = () => {
+    try {
+      userData.banner = imageBanner;
+    } catch (err) {
+      console.log('Error assigning banner to user data :', err);
+    }
+  };
+
+  const saveProfile = async () => {
+    await modulesToUserData();
+    await socialsToUserData();
+    await interestsToUserData();
+    await pfpToUserData();
+    await bannerToUserData();
+
     console.log('====================================');
-    console.log(modulesArray);
+    console.log(
+      'modules - ',
+      userData.modules,
+      ' about - ',
+      userData.about,
+      ' socials - ',
+      userData.socials,
+      ' interests - ',
+      userData.interests,
+      ' pfp - ',
+      userData.pfp,
+      ' banner - ',
+      userData.banner,
+      ' ',
+    );
     console.log('====================================');
-    //about
-    console.log('====================================');
-    console.log(about);
-    console.log('====================================');
-    //socials
-    console.log('====================================');
-    console.log(instagram);
-    console.log(discord);
-    console.log(email);
-    console.log('====================================');
-    //interests
-    console.log('====================================');
-    console.log(interestArray);
-    console.log('====================================');
+
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .update({
+        modules: userData.modules,
+        about: userData.about,
+        socials: userData.socials,
+        interests: userData.interests,
+        pfp: userData.pfp,
+        banner: userData.banner,
+      })
+      .then(() => {
+        console.log('User updated!');
+        toggleModalU();
+      });
+
+    // //pfp
+    // //banner
+
+    // //modules
+    // modulesArray = [module1, module2, module3, module4];
+    // console.log('====================================');
+    // console.log(modulesArray);
+    // console.log('====================================');
+    // //about
+    // console.log('====================================');
+    // console.log(about);
+    // console.log('====================================');
+    // //socials
+    // console.log('====================================');
+    // console.log(instagram);
+    // console.log(discord);
+    // console.log(email);
+    // console.log('====================================');
+    // //interests
+    // console.log('====================================');
+    // console.log(interestArray);
+    // console.log('====================================');
   };
 
   // const uploadBanner = () => {
@@ -439,7 +565,12 @@ const EditProfile = ({navigation}) => {
         {/* IMAGE */}
 
         <EditView>
-          <TouchableOpacity onPress={() => choosePhotoFromLibraryBanner()}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'red',
+              width: 375,
+            }}
+            onPress={() => choosePhotoFromLibraryBanner()}>
             <BannerImage source={imageBanner} />
           </TouchableOpacity>
 
@@ -464,8 +595,10 @@ const EditProfile = ({navigation}) => {
                 </TouchableOpacity>
 
                 <SocialInput
-                  value={module1}
+                  defaultValue={userData ? userData.modules[0] : 'Module'}
                   onChangeText={module1 => (modulesArray[0] = module1)}
+                  // onChangeText={txt => setUserData({...userData, modules: txt})}
+                  // onChangeText={txt => console.log(txt)}
                   maxLength={6}
                   keyboardType="default"
                 />
@@ -476,7 +609,9 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  value={module2}
+                  // value={module2}
+                  // onChangeText={module2 => (modulesArray[1] = module2)}
+                  defaultValue={userData ? userData.modules[1] : 'Module'}
                   onChangeText={module2 => (modulesArray[1] = module2)}
                   maxLength={6}
                   keyboardType="default"
@@ -487,7 +622,9 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  value={module3}
+                  // value={module3}
+                  // onChangeText={module3 => (modulesArray[2] = module3)}
+                  defaultValue={userData ? userData.modules[2] : 'Module'}
                   onChangeText={module3 => (modulesArray[2] = module3)}
                   maxLength={6}
                   keyboardType="default"
@@ -498,7 +635,9 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  value={module4}
+                  // value={module4}
+                  // onChangeText={module4 => (modulesArray[3] = module4)}
+                  defaultValue={userData ? userData.modules[3] : 'Module'}
                   onChangeText={module4 => (modulesArray[3] = module4)}
                   maxLength={6}
                   keyboardType="default"
@@ -520,8 +659,12 @@ const EditProfile = ({navigation}) => {
                 multiline
                 numberOfLines={4}
                 maxLength={160}
-                value={about}
-                onChangeText={userAbout => setAbout(userAbout)}
+                // value={about}
+                // onChangeText={userAbout => setAbout(userAbout)}
+                value={
+                  userData ? userData.about : 'Write something about yourself'
+                }
+                onChangeText={txt => setUserData({...userData, about: txt})}
                 placeholderText="About me" //need to make a useState for this
                 keyboardType="default"
               />
@@ -541,25 +684,37 @@ const EditProfile = ({navigation}) => {
                   source={require('../assets/icons/instagram.png')}
                 />
                 <SocialInput
-                  value={instagram}
-                  onChangeText={userInsta => setInstagram(userInsta)}
+                  // value={instagram}
+                  // onChangeText={userInsta => setInstagram(userInsta)}
+                  defaultValue={userData ? userData.socials[0] : 'Insta'}
+                  onChangeText={social1 => setInstagram(social1)}
                   keyboardType="default"
+                  autoCorrect={false}
+                  autoCapitalize="none"
                 />
               </SocialRow>
               <SocialRow>
                 <SocialIcon source={require('../assets/icons/discordB.png')} />
                 <SocialInput
-                  value={discord}
-                  onChangeText={userDiscord => setDiscord(userDiscord)}
+                  // value={discord}
+                  // onChangeText={userDiscord => setDiscord(userDiscord)}
+                  defaultValue={userData ? userData.socials[1] : 'Discord'}
+                  onChangeText={social2 => setDiscord(social2)}
                   keyboardType="default"
+                  autoCorrect={false}
+                  autoCapitalize="none"
                 />
               </SocialRow>
               <SocialRow>
                 <SocialIcon source={require('../assets/icons/email.png')} />
                 <SocialInput
-                  value={email}
-                  onChangeText={userEmail => setEmail(userEmail)}
-                  keyboardType="default"
+                  // value={email}
+                  // onChangeText={userEmail => setEmail(userEmail)}
+                  defaultValue={userData ? userData.socials[2] : 'Email'}
+                  onChangeText={social3 => setEmail(social3)}
+                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoCapitalize="none"
                 />
               </SocialRow>
             </Section>
@@ -584,6 +739,9 @@ const EditProfile = ({navigation}) => {
                 <InterestBtn title="Add" onPress={() => addInterest()} />
               </SocialRow>
 
+              {/* defaultValue={userData ? userData.modules[0] : 'Module'} */}
+
+              {/* {userData.interests.map(inter => { */}
               {interestArray.map(inter => {
                 if (inter != 'null') {
                   return (
@@ -630,6 +788,24 @@ const EditProfile = ({navigation}) => {
                 <SocialRow>
                   <Button title="Cancel" onPress={toggleModalC} />
                   <Button title="Remove" onPress={removeInterestFromArray} />
+                </SocialRow>
+              </View>
+            </Modal>
+
+            {/* POP UP FOR UPDATE SUCCESS */}
+            <Modal isVisible={isModalUVisible} backdropColor="grey">
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  padding: 20,
+                  borderRadius: 10,
+                }}>
+                <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+                  User profile updated!
+                </Text>
+
+                <SocialRow>
+                  <Button title="Ok" onPress={toggleModalU} />
                 </SocialRow>
               </View>
             </Modal>

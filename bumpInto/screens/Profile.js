@@ -39,9 +39,9 @@ import firestore from '@react-native-firebase/firestore';
 // Decide if I still need module 'buttons'?
 // Fix copy to clipboard
 //
-// LUX
-// When a user is
-
+// Fix banner image
+// Call all userData
+//
 // Need to make useEffect to run each time the page is clicked on
 // Maybe do an if statement to see if current 'imagePfp' matches the one
 // that it 'got' from the db, if match do nothing else change pfp!
@@ -49,7 +49,10 @@ import firestore from '@react-native-firebase/firestore';
 
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
-  const [imagePfp, setImagePfp] = useState(null);
+  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  const [imageBanner, setImageBanner] = useState(
+    require('../assets/testPFP.jpg'),
+  );
 
   user.providerData.forEach(userInfo => {
     console.log(userInfo);
@@ -80,9 +83,13 @@ const Profile = ({navigation}) => {
         flex: 1,
       }}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <BannerImage>
-          <Text>Background img</Text>
-        </BannerImage>
+        <View
+          style={{
+            backgroundColor: '#abc',
+            width: 400,
+          }}>
+          <BannerImage source={imageBanner} />
+        </View>
 
         <View style={styles.headerTile}>
           <View style={{flexDirection: 'row'}}>

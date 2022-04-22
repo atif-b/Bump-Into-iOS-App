@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 export const BannerImage = styled.View`
-  background-color: #aba;
   height: 130px;
+  align-self: center;
+  width: 390px;
+  resize-mode: cover;
 `;
 
 //had flex: 3px; ^^^ removed

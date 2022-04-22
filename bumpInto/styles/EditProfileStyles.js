@@ -28,6 +28,8 @@ export const PfpImage = styled.Image`
 export const BannerImage = styled.Image`
   height: 130px;
   align-self: center;
+  width: 390px;
+  resize-mode: cover;
 `;
 
 export const FormInput = styled.TextInput`

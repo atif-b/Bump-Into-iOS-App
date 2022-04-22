@@ -31,13 +31,31 @@ export const AuthProvider = ({children}) => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);
 
-            firestore().collection('users').doc(auth().currentUser.uid).set({
-              banner: 'null',
-              email: email,
-              firstName: firstName,
-              lastName: lastName,
-              pfp: '../assets/icons/pfp.png',
-            });
+            firestore()
+              .collection('users')
+              .doc(auth().currentUser.uid)
+              .set({
+                banner: 'null',
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                pfp: '../assets/icons/pfp.png',
+                interests: [
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                  'null',
+                ],
+                modules: ['module1', 'module2', 'module3'],
+                socials: ['insta', 'discord', 'email'],
+                about: 'About you.',
+              });
 
             await auth().currentUser.updateProfile(update);
             // firestore()
