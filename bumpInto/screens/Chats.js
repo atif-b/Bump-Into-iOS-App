@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Button,
   Image,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -22,8 +24,6 @@ import {
   TileTxtSub,
   PfpImage,
   PfpView,
-  ScrollView,
-  SafeAreaView,
 } from '../styles/ChatsStyles';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -36,70 +36,81 @@ import LinearGradient from 'react-native-linear-gradient';
 // Somehow define read/unread messages
 // // // // // // // // // // // // // // // //
 
-export default function Chats({navigation, route}) {
+var friendsIdArray = ['null'];
+var friendsNameArray = ['null'];
+var friendsPfpArray = ['null'];
+
+const Chats = ({navigation, route}) => {
   const {user, logout} = useContext(AuthContext);
 
   return (
     //NEED TO MAKE THIS SCROLLABLE
-    <View
-      style={{
-        flexDirection: 'column',
-        flex: 1,
-      }}>
-      <View
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView
         style={{
-          flex: 0.5,
-          backgroundColor: '#f4f4f4',
-          justifyContent: 'flex-end',
+          flexDirection: 'column',
+          flex: 1,
         }}>
-        <Text style={{fontSize: 24, padding: 15, paddingBottom: 15}}>
-          Messages
-        </Text>
-      </View>
-
-      <ChatBox>
-        <TouchableOpacity
-          onPress={() => {
-            alert('you clicked message button');
+        <View
+          style={{
+            flexDirection: 'column',
+            flex: 1,
           }}>
-          <ChatTileUnread>
-            <TileTxtMain> Tom </TileTxtMain>
-            <TileTxtSub> 3 new messages </TileTxtSub>
-            <PfpView>
-              <PfpImage source={require('../assets/testPFP.jpg')} />
-            </PfpView>
-          </ChatTileUnread>
-        </TouchableOpacity>
+          <View
+            style={{
+              flex: 0.5,
+              backgroundColor: '#f4f4f4',
+              justifyContent: 'flex-end',
+            }}>
+            <Text style={{fontSize: 24, padding: 15, paddingBottom: 15}}>
+              Messages
+            </Text>
+          </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            alert('you clicked message button');
-          }}>
-          <ChatTileUnread>
-            <TileTxtMain> Sally </TileTxtMain>
-            <TileTxtSub> 1 new messages </TileTxtSub>
-            <PfpView>
-              <PfpImage source={require('../assets/testPFP.jpg')} />
-            </PfpView>
-          </ChatTileUnread>
-        </TouchableOpacity>
+          <ChatBox>
+            <TouchableOpacity
+              onPress={() => {
+                alert('you clicked message button');
+              }}>
+              <ChatTileUnread>
+                <TileTxtMain> Tom </TileTxtMain>
+                <TileTxtSub> 3 new messages </TileTxtSub>
+                <PfpView>
+                  <PfpImage source={require('../assets/testPFP.jpg')} />
+                </PfpView>
+              </ChatTileUnread>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            alert('you clicked message button');
-          }}>
-          <ChatTileRead>
-            <TileTxtMain> Sam </TileTxtMain>
-            <TileTxtSub> Nope not yet </TileTxtSub>
-            <PfpView>
-              <PfpImage source={require('../assets/testPFP.jpg')} />
-            </PfpView>
-          </ChatTileRead>
-        </TouchableOpacity>
-      </ChatBox>
+            <TouchableOpacity
+              onPress={() => {
+                // alert('you clicked message button');
+                navigation.navigate('ChatsPage');
+              }}>
+              <ChatTileUnread>
+                <TileTxtMain> Sally </TileTxtMain>
+                <TileTxtSub> 1 new messages </TileTxtSub>
+                <PfpView>
+                  <PfpImage source={require('../assets/testPFP.jpg')} />
+                </PfpView>
+              </ChatTileUnread>
+            </TouchableOpacity>
 
-      {/* <View style={{flex: 0.3, backgroundColor: '#f4f4f4'}}> */}
-      {/* <QRCode
+            <TouchableOpacity
+              onPress={() => {
+                alert('you clicked message button');
+              }}>
+              <ChatTileRead>
+                <TileTxtMain> Sam </TileTxtMain>
+                <TileTxtSub> Nope not yet </TileTxtSub>
+                <PfpView>
+                  <PfpImage source={require('../assets/testPFP.jpg')} />
+                </PfpView>
+              </ChatTileRead>
+            </TouchableOpacity>
+          </ChatBox>
+
+          {/* <View style={{flex: 0.3, backgroundColor: '#f4f4f4'}}> */}
+          {/* <QRCode
           value="test!"
           color={'#2C8DDB'}
           backgroundColor={'white'}
@@ -111,20 +122,23 @@ export default function Chats({navigation, route}) {
           logoBackgroundColor={'transparent'}
         /> */}
 
-      {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
-      {/* <Button title="Log out" onPress={() => logout()} /> */}
-      {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
-      {/* <TouchableOpacity
+          {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
+          {/* <Button title="Log out" onPress={() => logout()} /> */}
+          {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
+          {/* <TouchableOpacity
           buttonTitle="Logout"
           onPress={() => LoadLogin(navigation, logout)}>
           <LogoutBtn>Logout</LogoutBtn>
         </TouchableOpacity> */}
 
-      {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
-      {/* </View> */}
-    </View>
+          {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
+          {/* </View> */}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-}
+};
+export default Chats;
 
 const LoadLogin = (navigation, logout) => {
   logout();

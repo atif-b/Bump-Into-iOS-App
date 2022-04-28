@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
+  RefreshControl,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -32,6 +33,10 @@ import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
 import firestore from '@react-native-firebase/firestore';
+import InterestBoxProfile from '../components/InterestBoxProfile';
+import storage from '@react-native-firebase/storage';
+import Modal from 'react-native-modal';
+import QRCode from 'react-native-qrcode-svg';
 
 // // // // // // // TO DO // // // // // // //
 // Bump button functionality
@@ -47,20 +52,99 @@ import firestore from '@react-native-firebase/firestore';
 // that it 'got' from the db, if match do nothing else change pfp!
 // // // // // // // // // // // // // // // //
 
+var interestArray = [
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+];
+
+var modulesArray = ['module1', 'module2', 'module3', ''];
+var socialsArray = ['insta', 'discord', 'email']; ///the order the i designed is actually disc/email/insta
+
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
   const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
   const [imageBanner, setImageBanner] = useState(
     require('../assets/testPFP.jpg'),
   );
+  const [tImg, setTImg] = useState(null);
+
+  const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    console.log('Refreshing data');
+    getUser();
+    setRefreshing(false);
+  });
+
+  const getUser = async () => {
+    //   .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
+    const url = await storage()
+      .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
+      .getDownloadURL();
+
+    console.log('URL == ', url);
+    setTImg(url);
+    console.log('tImg -- ', tImg);
+
+    const currentUser = await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          console.log('user data ', documentSnapshot.data());
+          getInterests(documentSnapshot.data());
+          setImagePfp(documentSnapshot.data().pfp);
+          setImageBanner(documentSnapshot.data().banner);
+          setUserData(documentSnapshot.data());
+        }
+      });
+  };
+
+  const getInterests = async allData => {
+    console.log('getInterests called');
+
+    try {
+      for (let i = 0; i < allData.interests.length; i++) {
+        interestArray[i] = allData.interests[i];
+      }
+    } catch (err) {
+      console.log('Error fetching and assinging interests - ', err);
+    }
+  };
+
+  // function onResult(QuerySnapshot) {
+  //   console.log('Got Users collection result.');
+  // }
+
+  // function onError(error) {
+  //   console.error(error);
+  // }
+
+  // firestore().collection('Users').doc(user.uid).onSnapshot(onResult, onError);
 
   user.providerData.forEach(userInfo => {
     console.log(userInfo);
   });
 
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   // When the screen is loaded, below functions are called
   useEffect(() => {
-    getPfp();
+    getUser();
   }, []);
 
   const getPfp = () => {
@@ -78,6 +162,9 @@ const Profile = ({navigation}) => {
   return (
     //add SafeAreaView tag here if i dont want the background img covering past notch.
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{
         flexDirection: 'column',
         flex: 1,
@@ -89,6 +176,7 @@ const Profile = ({navigation}) => {
             width: 400,
           }}>
           <BannerImage source={imageBanner} />
+          {/* <Image source={require('../assets/testPFP.jpg')} /> */}
         </View>
 
         <View style={styles.headerTile}>
@@ -107,7 +195,8 @@ const Profile = ({navigation}) => {
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  alert('you clicked QR button');
+                  // alert('you clicked QR button');
+                  toggleModal();
                 }}>
                 <Image
                   style={{height: 30, width: 30}}
@@ -150,7 +239,9 @@ const Profile = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-              <Text style={styles.moduleText}>Module1</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[0] : 'Module 1'}
+              </Text>
             </LinearGradient>
 
             <LinearGradient
@@ -165,7 +256,9 @@ const Profile = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 1]}>
-              <Text style={styles.moduleText}>Module2</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[1] : 'Module 2'}
+              </Text>
             </LinearGradient>
 
             <LinearGradient
@@ -180,7 +273,26 @@ const Profile = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 1]}>
-              <Text style={styles.moduleText}>Module3</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[2] : 'Module 3'}
+              </Text>
+            </LinearGradient>
+
+            <LinearGradient
+              colors={[
+                '#aab9F2',
+                'rgba(135, 222, 255, 0.7)',
+                'rgba(165, 231, 160, 0.3)',
+                'rgba(20, 200, 100, 0.5)',
+              ]}
+              style={styles.linearGradient}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0.5}}
+              style={styles.moduleColor}
+              locations={[0.2, 0.4, 0.7, 1]}>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[3] : 'Module 4'}
+              </Text>
             </LinearGradient>
           </View>
         </View>
@@ -189,9 +301,7 @@ const Profile = ({navigation}) => {
           <ProfileBox>
             <SocialTabTitle>About me </SocialTabTitle>
             <AboutMeText>
-              Busy creating 'Bump Into' app using react native! Busy creating
-              'Bump Into' app using react native! Busy creating 'Bump Into' app
-              using react native!
+              {userData ? userData.about : 'No about yet!'}
             </AboutMeText>
           </ProfileBox>
 
@@ -205,7 +315,9 @@ const Profile = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText> #Taf1789 </SocialText>
+                <SocialText>
+                  {userData ? userData.socials[1] : 'No discord!'}
+                </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -220,7 +332,7 @@ const Profile = ({navigation}) => {
 
                 <LineSplit />
                 <SocialText style={{fontSize: 13, left: 5}}>
-                  w1736608@my.westminster.ac.uk
+                  {userData ? userData.socials[2] : 'No email!'}
                 </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
@@ -235,7 +347,9 @@ const Profile = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText>atif-b</SocialText>
+                <SocialText>
+                  {userData ? userData.socials[0] : 'No instagram!'}
+                </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -244,27 +358,11 @@ const Profile = ({navigation}) => {
 
           <InterestBox>
             <SocialTabTitle>Interests</SocialTabTitle>
-            <InterestBubble>
-              <InterestBubbleText>Call Of Duty</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Lofi</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Basketball</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Crypto</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Video Editing</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Coding</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>React Native</InterestBubbleText>
-            </InterestBubble>
+            {interestArray.map(inter => {
+              if (inter != 'null') {
+                return <InterestBoxProfile key={inter} interestText={inter} />;
+              }
+            })}
           </InterestBox>
         </View>
       </View>
@@ -281,7 +379,36 @@ const Profile = ({navigation}) => {
           left: 20,
         }}>
         <PfpImage source={imagePfp} />
+        {/* <Image source={imageBanner} /> */}
+        <Image source={tImg} />
       </View>
+
+      <Modal isVisible={isModalVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+          }}>
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            This is your profile QR
+          </Text>
+
+          <QRCode
+            value="test!"
+            color={'#2C8DDB'}
+            backgroundColor={'white'}
+            size={100}
+            // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
+            logoMargin={2}
+            logoSize={20}
+            logoBorderRadius={10}
+            logoBackgroundColor={'transparent'}
+          />
+
+          <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };

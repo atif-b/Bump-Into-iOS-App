@@ -1,5 +1,12 @@
 import React, {useContext, useEffect} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Button} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+  Keyboard,
+} from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
@@ -10,52 +17,121 @@ import auth from '@react-native-firebase/auth';
 import {HomeBox, HomeBtn, BtnTxt, LogoutBtn} from '../styles/HomeStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import {RNCamera} from 'react-native-camera';
 
 // // // // // // // TO DO // // // // // // //
-// Make this scrollable?? --> test app on different phones
+//
 // // // // // // // // // // // // // // // //
+
+var friendsIdArray = ['null'];
+var friendsNameArray = ['null'];
+var friendsPfpArray = ['null'];
 
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
 
+  const getUserFriends = async () => {
+    console.log('getting doc id');
+    var pos = 0;
+    const userFriends = await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('friends')
+      .get()
+      .then(querySnapshot => {
+        // console.log(querySnapshot.size);
+        console.log('q snap ', querySnapshot);
+
+        getFriendIds(querySnapshot);
+
+        testGet();
+
+        async function testGet() {
+          for (let i = 0; i < friendsIdArray.length; i++) {
+            await getFriends(i, friendsIdArray[i]);
+            console.log('names ', friendsNameArray);
+            console.log('pfps ', friendsPfpArray);
+          }
+        }
+
+        querySnapshot.forEach(documentSnapshot => {
+          if (documentSnapshot.id == 'del') {
+            // skip over the 'del' so its not added to array
+            console.log('Del user skipped');
+          } else {
+            friendsIdArray[pos] = documentSnapshot.id;
+          }
+
+          pos++;
+        });
+      });
+    console.log(friendsIdArray);
+  };
+
   useEffect(() => {
-    if (checkIfExists() != 1) {
-      createProfileCol();
-      console.log('creating');
+    // createFriendsStore();
+    console.log('ex first?');
+    getUserFriends();
+    if (friendsNameArray[0] == 'null') {
+      createFriendsStore();
     }
   }, []);
 
-  const checkIfExists = () => {
-    var exists = 0;
-
-    firestore()
+  const createFriendsStore = async () => {
+    await firestore()
       .collection('users')
       .doc(user.uid)
-      .collection('profileDetails')
-      .get()
-      .then(sub => {
-        if (sub.docs.length > 0) {
-          console.log('exists');
-          exists = 1;
-        } else {
-          console.log('doesnt exits');
-        }
+      .collection('friends')
+      .doc('del')
+      .set({
+        name: 'del',
+      })
+      .then(() => {
+        console.log('friend created');
       });
-
-    return exists;
   };
 
-  const createProfileCol = () => {
-    // firestore()
-    //   .collection('users')
-    //   .doc(user.uid)
-    //   .collection('profileDetails')
-    //   .set({
-    //     about: 'Say something about yourself',
-    //     interests: ['coding', 'cooking'],
-    //     modules: ['webdev', 'secfun', 'iosdev'],
-    //     socials: ['instagram', 'discord', 'email'],
-    //   });
+  const getFriendIds = async friends => {
+    var pos = 0;
+    friends.forEach(f => {
+      if (f.id == 'del') {
+        // skip over the 'del' so its not added to array
+        console.log('Del user skipped');
+        // removeDelData();
+      } else {
+        friendsIdArray[pos] = f.id;
+      }
+      pos++;
+    });
+  };
+
+  // const removeDelData = async () => {
+  //   await firestore()
+  //     .collection('users')
+  //     .doc(user.uid)
+  //     .collection('friends')
+  //     .doc('del')
+  //     .delete()
+  //     .then(() => {
+  //       console.log('Del user removed');
+  //     });
+  // };
+
+  const getFriends = async (counter, id) => {
+    const currentFriend = await firestore()
+      .collection('users')
+      .doc(id)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          friendsNameArray[counter] = documentSnapshot.data().firstName;
+          friendsPfpArray[counter] = documentSnapshot.data().pfp;
+
+          console.log('this getting so weird ', friendsNameArray[counter]);
+          // return documentSnapshot.data().firstName;
+        }
+      });
   };
 
   //////////NEED TO DO THE ABOVE, CHECK IF EXISTS, IF IT DOESNT THEN CALL CREATEPROFILE
@@ -98,7 +174,7 @@ export default function Home({navigation, route}) {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ScanQR')}>
           <LinearGradient
             colors={[
               '#6D83FB',
@@ -138,7 +214,10 @@ export default function Home({navigation, route}) {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Friends')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Friends', {friendsNameArray, friendsPfpArray})
+          }>
           <LinearGradient
             colors={[
               '#6D83FB',
@@ -212,6 +291,7 @@ export default function Home({navigation, route}) {
 }
 
 const LoadLogin = (navigation, logout) => {
+  Keyboard.removeListener('keyboardWillShow');
   logout();
 };
 

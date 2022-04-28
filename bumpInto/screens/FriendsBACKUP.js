@@ -30,14 +30,9 @@ import firestore from '@react-native-firebase/firestore';
 import FriendsCard from '../components/FriendsCard';
 
 var friendsIdArray = ['null'];
-var friendsNameArray = ['null'];
-var friendsPfpArray = ['null'];
-var counter = 0;
 
-const Friends = ({route, navigation}) => {
+const Friends = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
-  const [friends, setFriends] = useState([]);
-  const {friendsNameArray, friendsPfpArray} = route.params;
 
   const getUserFriends = async () => {
     console.log('getting doc id');
@@ -62,19 +57,8 @@ const Friends = ({route, navigation}) => {
   };
 
   useEffect(() => {
-    counter = 0;
-    console.log('====================================');
-    console.log(friendsNameArray);
-    console.log('====================================');
-    if (friendsIdArray == 'null') {
-      getUserFriends();
-    } else {
-      var counter = 0;
-      for (let i = 0; i < friendsIdArray.length; i++) {
-        friendsNameArray[i] = getFriends(friendsIdArray[i]);
-      }
-      console.log(friendsNameArray);
-    }
+    console.log('exc first?');
+    getUserFriends();
   }, []);
 
   const getFriendIds = async friends => {
@@ -84,32 +68,6 @@ const Friends = ({route, navigation}) => {
       friendsIdArray[pos] = f.id;
       pos++;
     });
-  };
-
-  const getFriends = async friendId => {
-    const currentFriend = await firestore()
-      .collection('users')
-      .doc(friendId)
-      .get()
-      .then(documentSnapshot => {
-        if (documentSnapshot.exists) {
-          console.log('user data ', documentSnapshot.data());
-          return documentSnapshot.data().firstName;
-          // getInterests(documentSnapshot.data());
-          // setImagePfp(documentSnapshot.data().pfp);
-          // setUserData(documentSnapshot.data());
-        }
-      });
-  };
-
-  const navigateChatPage = (fName, friendId) => {
-    console.log('navigating to chats page with ', fName);
-    navigation.navigate('ChatsPage', {fName, friendId});
-  };
-
-  const navigateFriendProfile = friendId => {
-    console.log('navigating to the profile page of ', friendId);
-    navigation.navigate('ProfileUser', {friendId});
   };
 
   return (
@@ -131,47 +89,32 @@ const Friends = ({route, navigation}) => {
         </View>
 
         <FriendsBox>
-          {friendsNameArray.map(fName => {
-            console.log('first log', friendsIdArray[counter]);
-            console.log('second log', friendsNameArray[counter]);
-
-            if (fName != 'null') {
+          {friendsIdArray.map(fID => {
+            if (fID != 'null') {
               return (
                 <FriendsCard
-                  key={fName}
-                  friendName={fName}
+                  key={fID}
+                  friendName={fID}
                   friendPfp={require('../assets/testPFP.jpg')}
-                  friendId={friendsIdArray[counter]}
-                  onPress={() => navigateFriendProfile(friendsIdArray[counter])}
                   // onPress={() => removeInterestConf(inter)}
-                  onPress={() =>
-                    navigateChatPage(fName, friendsIdArray[counter])
-                  }
-
-                  // onPress={() => navigation.navigate('ChatsPage', {fName, friendsIdArray[counter]})}
                 />
               );
             } else {
               console.log('well.....');
               console.log(friendsIdArray);
-              if (friendsNameArray.size < 1) {
-                return (
-                  <Text key={'noF'} style={styles.noFText}>
-                    You havent added any friends yet!
-                  </Text>
-                );
-              }
             }
-            counter++;
           })}
 
-          {/* <TouchableOpacity onPress={() => navigation.navigate('ProfileUser')}>
-            <FriendTile> */}
-          {/* 10char is the max before formatting messes up */}
-          {/* <PfpView>
+          <TouchableOpacity onPress={() => navigation.navigate('ProfileUser')}>
+            <FriendTile>
+              {/* 10char is the max before formatting messes up */}
+              <PfpView>
                 <PfpImage source={require('../assets/testPFP.jpg')} />
               </PfpView>
               <TileTxtMain> Sam </TileTxtMain>
+
+              {/* that is used for spacing ^^ */}
+
               <MessageIcon
                 onPress={() => {
                   alert('you clicked message button');
@@ -179,7 +122,39 @@ const Friends = ({route, navigation}) => {
                 <Image source={require('../assets/icons/message.png')} />
               </MessageIcon>
             </FriendTile>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <FriendTile>
+              <PfpView>
+                <PfpImage source={require('../assets/testPFP.jpg')} />
+              </PfpView>
+              <TileTxtMain> Atif </TileTxtMain>
+
+              <MessageIcon
+                onPress={() => {
+                  alert('you clicked message button');
+                }}>
+                <Image source={require('../assets/icons/message.png')} />
+              </MessageIcon>
+            </FriendTile>
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <FriendTile>
+              <TileTxtMain> Mo </TileTxtMain>
+              {/* <TileTxtSub> </TileTxtSub> */}
+              <MessageIcon
+                onPress={() => {
+                  alert('you clicked message button');
+                }}>
+                <Image source={require('../assets/icons/message.png')} />
+              </MessageIcon>
+              <PfpView>
+                <PfpImage source={require('../assets/testPFP.jpg')} />
+              </PfpView>
+            </FriendTile>
+          </TouchableOpacity>
         </FriendsBox>
       </ScrollView>
     </SafeAreaView>
@@ -194,13 +169,5 @@ const styles = StyleSheet.create({
     marginRight: 2,
     borderWidth: 5,
     marginBottom: 10,
-  },
-
-  noFText: {
-    backgroundColor: '#f3f3f3',
-    fontSize: 20,
-    textAlign: 'center',
-    paddingVertical: 60,
-    margin: 20,
   },
 });

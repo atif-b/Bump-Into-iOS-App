@@ -7,18 +7,21 @@ import Chats from '../screens/Chats';
 import Friends from '../screens/Friends';
 import ProfileUser from '../screens/ProfileUser';
 import EditProfile from '../screens/EditProfile';
+import ChatsPage from '../screens/ChatsPage';
+import ScanQR from '../screens/ScanQR';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = (navigation, route) => {
-  console.log('******tabs*****');
+  console.log('******tabsNav*****');
   if (route.params?.check) {
     console.log(route.params?.check);
-  } else {
-    console.log('nope t');
   }
+  // else {
+  //   console.log('params');
+  // }
   return (
     <Tab.Navigator
       screenOptions={{
@@ -70,6 +73,20 @@ const Tabs = (navigation, route) => {
       <Tab.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+      <Tab.Screen
+        name="ChatsPage"
+        component={ChatsPage}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+      <Tab.Screen
+        name="ScanQR"
+        component={ScanQR}
         options={{
           tabBarButton: props => null,
         }}

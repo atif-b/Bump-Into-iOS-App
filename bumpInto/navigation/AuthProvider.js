@@ -55,21 +55,17 @@ export const AuthProvider = ({children}) => {
                 modules: ['module1', 'module2', 'module3'],
                 socials: ['insta', 'discord', 'email'],
                 about: 'About you.',
+              })
+              .then(() => {
+                console.log('firestore for user created');
               });
 
             await auth().currentUser.updateProfile(update);
-            // firestore()
-            //   .collection('users')
-            //   .doc(auth().currentUser.uid)
-            //   .collection('profileDetails')
-            //   .set({
-            //     about: 'Say something about yourself',
-            //     interests: ['coding', 'cooking'],
-            //     modules: ['webdev', 'secfun', 'iosdev'],
-            //     socials: ['instagram', 'discord', 'email'],
-            //   });
           } catch (e) {
-            console.log('error while creating firestore collection: ', e);
+            console.log(
+              'error while creating firestore friends collection: ',
+              e,
+            );
           }
         },
         logout: async () => {

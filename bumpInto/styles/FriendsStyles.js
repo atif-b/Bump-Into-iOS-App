@@ -23,6 +23,7 @@ export const FriendTile = styled.View`
 export const TileTxtMain = styled.Text`
   font-size: 24px;
   padding-left: 60px;
+  padding-bottom: 20px;
   top: 10px;
 `;
 

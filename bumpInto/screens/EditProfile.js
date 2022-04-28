@@ -38,6 +38,7 @@ import firestore from '@react-native-firebase/firestore';
 import {Dropdown} from 'react-native-material-dropdown';
 import Modal from 'react-native-modal';
 import InterestBox from '../components/InterestBox';
+import storage from '@react-native-firebase/storage';
 // import FormInput from '../components/FormInput';
 
 // // // // // // // TO DO // // // // // // //
@@ -86,14 +87,6 @@ const EditProfile = ({navigation}) => {
   const [discord, setDiscord] = useState();
   const [email, setEmail] = useState(); //could make this auto, but also give an option to set a diff email
 
-  const [module1, setModule1] = useState();
-  const [module2, setModule2] = useState();
-  const [module3, setModule3] = useState();
-  const [module4, setModule4] = useState();
-
-  const [about, setAbout] = useState();
-
-  const [docId, setDocId] = useState();
   const [interest, setInterest] = useState();
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -111,9 +104,6 @@ const EditProfile = ({navigation}) => {
   //////
   //////
   //////
-
-  // console.log(userData.about);
-  // console.log(userData.modules)
 
   const getUser = async () => {
     const currentUser = await firestore()
@@ -135,13 +125,38 @@ const EditProfile = ({navigation}) => {
   //////
 
   useEffect(() => {
+    console.log('this is done first?');
     getUser();
-    getInterests();
+    // getInterests();
 
     //when calling all info from db, check how many module vals are provided
     //and set the right amount of modules as true
     //also disable all module boxes unless the one above is true
   }, []);
+
+  // const uploadImage = async () => {
+  //   const uploadUri = imagePfp.uri;
+  //   const filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+  //   console.log('Filename : ', filename);
+  //   const fileExt = filename.split('.').pop();
+  //   console.log('fileEXT ', fileExt);
+  //   console.log('upload uri : ', uploadUri);
+
+  //   // const reference = storage().ref(`pfp/images/${filename}`);
+
+  //   const reference = storage().ref(filename);
+
+  //   try {
+  //     await reference.putFile(uploadUri);
+  //     // await reference.putFile(uploadUri,
+  //     //   StorageMetadata(contentType: 'image/jpg'),
+  //     // );
+  //     // await reference.putFile(uploadUri, StorageMetadata(contentType: 'image/jpg'));
+  //   } catch (err) {
+  //     console.log('error uploading image to storage: ', err);
+  //   }
+  // };
 
   const choosePhotoFromLibraryPfp = async () => {
     ImagePicker.openPicker({
@@ -153,6 +168,9 @@ const EditProfile = ({navigation}) => {
       .then(async image => {
         change = false;
         setImagePfp({uri: image.path});
+
+        // const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+        // setImagePfp({uri: imageUri});
 
         // await uploadPfp();
       })
@@ -219,91 +237,6 @@ const EditProfile = ({navigation}) => {
     await getPfp();
   };
 
-  // const getDocId = async () => {
-  //   console.log('getting doc id');
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('profileDetails')
-  //     .get()
-  //     .then(querySnapshot => {
-  //       querySnapshot.forEach(documentSnapshot => {
-  //         setDocId(documentSnapshot.id);
-  //         console.log('====================================');
-  //         console.log(docId);
-  //         console.log('====================================');
-  //       });
-  //     });
-  // };
-
-  // const getModules = async () => {
-  //   console.log('getModules called');
-  //   getDocId();
-
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('profileDetails')
-  //     .doc(docId)
-  //     .get()
-  //     .then(documentSnapshot => {
-  //       console.log('GET Module ====> ', documentSnapshot.get('modules'));
-  //       modulesArray = documentSnapshot.get('modules');
-
-  //       setModule1(modulesArray[0]);
-  //       setModule2(modulesArray[1]);
-  //       setModule3(modulesArray[2]);
-  //       setModule4(modulesArray[3]);
-
-  //       // console.log(modulesArray.length);
-  //     })
-  //     .catch(function (err) {
-  //       console.log('error: ', err.message);
-  //     });
-  // };
-
-  // const getAbout = async () => {
-  //   console.log('getAbout called');
-  //   getDocId();
-
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('profileDetails')
-  //     .doc(docId)
-  //     .get()
-  //     .then(documentSnapshot => {
-  //       console.log('GET About ====> ', documentSnapshot.get('about'));
-
-  //       setAbout(documentSnapshot.get('about'));
-  //     });
-  // };
-
-  // const getSocials = async () => {
-  //   console.log('getSocials called');
-  //   console.log(getDocId());
-
-  //   firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('profileDetails')
-  //     .doc(docId)
-  //     .get()
-  //     .then(documentSnapshot => {
-  //       console.log('GET Social====> ', documentSnapshot.get('socials'));
-
-  //       // setAbout(documentSnapshot.get('socials'));
-
-  //       socialsArray = documentSnapshot.get('socials');
-  //       setInstagram(socialsArray[0]);
-  //       setDiscord(socialsArray[1]);
-  //       setEmail(socialsArray[2]);
-  //     })
-  //     .catch(function (err) {
-  //       console.log('error: ', err.message);
-  //     });
-  // };
-
   const getInterests = async allData => {
     console.log('getInterests called');
     console.log('ALL DATA RIGHT???? --> ', allData);
@@ -315,34 +248,6 @@ const EditProfile = ({navigation}) => {
     } catch (err) {
       console.log('Error fetching and assinging interests - ', err);
     }
-
-    // getDocId();
-
-    // firestore()
-    //   .collection('users')
-    //   .doc(user.uid)
-    //   .collection('profileDetails')
-    //   .doc(docId)
-    //   .get()
-    //   .then(documentSnapshot => {
-    //     console.log('GET ====> ', documentSnapshot.get('interests'));
-
-    //     if (documentSnapshot.get('interests').length == 10) {
-    //       interestArray = documentSnapshot.get('interests');
-    //     } else {
-    //       for (let i = 0; i < documentSnapshot.get('interests').length; i++) {
-    //         interestArray[i] = documentSnapshot.get('interests')[i];
-    //       }
-    //     }
-
-    //     this.textInput.clear();
-    //     setInterest('');
-    //   })
-    //   .catch(function (err) {
-    //     console.log('error: ', err.message);
-    //   });
-    // this.textInput.clear();
-    // setInterest('');
   };
 
   const moduleBtnClicked = clicked => {
@@ -424,6 +329,18 @@ const EditProfile = ({navigation}) => {
   const modulesToUserData = () => {
     try {
       for (let i = 0; i < modulesArray.length; i++) {
+        if (modulesArray[i] == 'a' || modulesArray[i] == undefined) {
+          if (i == 0) {
+            modulesArray[i] = this.module1Input.text();
+          } else if (i == 1) {
+            modulesArray[i] = this.module2Input.text();
+          } else if (i == 2) {
+            modulesArray[i] = this.module3Input.text();
+          } else {
+            modulesArray[i] = this.module4Input.text();
+          } ///////MIGHT NEED TO DO this.module1Input.text or sumn???
+          console.log('module array assigned from the module textbox');
+        }
         userData.modules[i] = modulesArray[i];
       }
     } catch (err) {
@@ -433,9 +350,23 @@ const EditProfile = ({navigation}) => {
 
   const socialsToUserData = () => {
     try {
-      userData.socials[0] = instagram;
-      userData.socials[1] = discord;
-      userData.socials[2] = email;
+      if (instagram == '' || instagram == undefined) {
+        userData.socials[0] = this.social1Input.text();
+      } else {
+        userData.socials[0] = instagram;
+      }
+
+      if (discord == '' || discord == undefined) {
+        userData.socials[1] = this.social2Input.text();
+      } else {
+        userData.socials[1] = discord;
+      }
+
+      if (email == '' || email == undefined) {
+        userData.socials[2] = this.social3Input.text();
+      } else {
+        userData.socials[2] = email;
+      }
     } catch (err) {
       console.log('Error assigning socials to user data :', err);
     }
@@ -472,6 +403,7 @@ const EditProfile = ({navigation}) => {
     await socialsToUserData();
     await interestsToUserData();
     await pfpToUserData();
+    // await uploadImage();
     await bannerToUserData();
 
     console.log('====================================');
@@ -507,29 +439,6 @@ const EditProfile = ({navigation}) => {
         console.log('User updated!');
         toggleModalU();
       });
-
-    // //pfp
-    // //banner
-
-    // //modules
-    // modulesArray = [module1, module2, module3, module4];
-    // console.log('====================================');
-    // console.log(modulesArray);
-    // console.log('====================================');
-    // //about
-    // console.log('====================================');
-    // console.log(about);
-    // console.log('====================================');
-    // //socials
-    // console.log('====================================');
-    // console.log(instagram);
-    // console.log(discord);
-    // console.log(email);
-    // console.log('====================================');
-    // //interests
-    // console.log('====================================');
-    // console.log(interestArray);
-    // console.log('====================================');
   };
 
   // const uploadBanner = () => {
@@ -601,6 +510,9 @@ const EditProfile = ({navigation}) => {
                   // onChangeText={txt => console.log(txt)}
                   maxLength={6}
                   keyboardType="default"
+                  ref={input => {
+                    this.module1Input = input;
+                  }}
                 />
               </ModuleRow>
 
@@ -615,6 +527,9 @@ const EditProfile = ({navigation}) => {
                   onChangeText={module2 => (modulesArray[1] = module2)}
                   maxLength={6}
                   keyboardType="default"
+                  ref={input => {
+                    this.module2Input = input;
+                  }}
                 />
               </ModuleRow>
               <ModuleRow>
@@ -628,6 +543,9 @@ const EditProfile = ({navigation}) => {
                   onChangeText={module3 => (modulesArray[2] = module3)}
                   maxLength={6}
                   keyboardType="default"
+                  ref={input => {
+                    this.module3Input = input;
+                  }}
                 />
               </ModuleRow>
               <ModuleRow>
@@ -641,6 +559,9 @@ const EditProfile = ({navigation}) => {
                   onChangeText={module4 => (modulesArray[3] = module4)}
                   maxLength={6}
                   keyboardType="default"
+                  ref={input => {
+                    this.module4Input = input;
+                  }}
                 />
               </ModuleRow>
             </Section>
@@ -691,6 +612,9 @@ const EditProfile = ({navigation}) => {
                   keyboardType="default"
                   autoCorrect={false}
                   autoCapitalize="none"
+                  ref={input => {
+                    this.social1Input = input;
+                  }}
                 />
               </SocialRow>
               <SocialRow>
@@ -703,6 +627,9 @@ const EditProfile = ({navigation}) => {
                   keyboardType="default"
                   autoCorrect={false}
                   autoCapitalize="none"
+                  ref={input => {
+                    this.social2Input = input;
+                  }}
                 />
               </SocialRow>
               <SocialRow>
@@ -715,6 +642,9 @@ const EditProfile = ({navigation}) => {
                   keyboardType="email-address"
                   autoCorrect={false}
                   autoCapitalize="none"
+                  ref={input => {
+                    this.social3Input = input;
+                  }}
                 />
               </SocialRow>
             </Section>
@@ -744,6 +674,7 @@ const EditProfile = ({navigation}) => {
               {/* {userData.interests.map(inter => { */}
               {interestArray.map(inter => {
                 if (inter != 'null') {
+                  console.log('int array mappping!');
                   return (
                     <InterestBox
                       key={inter}
@@ -835,10 +766,6 @@ const copyToClipboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollView: {
-    // backgroundColor: 'pink',
-    // marginHorizontal: 20,
   },
 
   stickyBtn: {

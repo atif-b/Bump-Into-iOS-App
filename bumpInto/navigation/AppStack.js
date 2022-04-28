@@ -12,6 +12,8 @@ import Chats from '../screens/Chats';
 import Friends from '../screens/Friends';
 import ProfileUser from '../screens/ProfileUser';
 import EditProfile from '../screens/EditProfile';
+import ChatsPage from '../screens/ChatsPage';
+import ScanQR from '../screens/ScanQR';
 
 import Tabs from './BottomTab';
 
@@ -47,6 +49,22 @@ const AppStack = () => {
       <Stack.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ChatsPage"
+        component={ChatsPage}
+        options={{headerShown: false}}
+        // options={({route}) => ({
+        //   // headerShown: true,
+        //   title: route.params.fName,
+        // })}
+      />
+
+      <Stack.Screen
+        name="ScanQR"
+        component={ScanQR}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
