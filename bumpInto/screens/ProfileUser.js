@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -7,12 +7,16 @@ import {
   Button,
   Image,
   ScrollView,
+  SafeAreaView,
+  StatusBar,
+  RefreshControl,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
+  BannerImage,
   ProfileBox,
   SocialTab,
   CopyIcon,
@@ -28,35 +32,150 @@ import {
 import {AuthContext} from '../navigation/AuthProvider';
 import auth from '@react-native-firebase/auth';
 import Clipboard from '@react-native-clipboard/clipboard';
+import firestore from '@react-native-firebase/firestore';
+import InterestBoxProfile from '../components/InterestBoxProfile';
+import storage from '@react-native-firebase/storage';
+import Modal from 'react-native-modal';
+import QRCode from 'react-native-qrcode-svg';
 
 // // // // // // // TO DO // // // // // // //
-// retrieve 'clicked' user's profile and display it
-// LUX
-// When a user views a profile, they can scroll down to interest
-// --> Interests that both users share could be highlighted in a different colour?
-// --> This depends on if users type interests themselves... could still implement this
-// --> It may not be finished but can help create new 'links' between strangers.
+// Bump button functionality
+// Qr button functionality
+// Decide if I still need module 'buttons'?
+// Fix copy to clipboard
+//
+// Fix banner image
+// Call all userData
+//
+// Need to make useEffect to run each time the page is clicked on
+// Maybe do an if statement to see if current 'imagePfp' matches the one
+// that it 'got' from the db, if match do nothing else change pfp!
 // // // // // // // // // // // // // // // //
 
-const ProfileUser = ({navigation}) => {
+var interestArray = [
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+  'null',
+];
+
+var modulesArray = ['module1', 'module2', 'module3', ''];
+var socialsArray = ['insta', 'discord', 'email']; ///the order the i designed is actually disc/email/insta
+
+const ProfileUser = ({route, navigation}) => {
   const {user, logout} = useContext(AuthContext);
+  const [imagePfp, setImagePfp] = useState(require('../assets/testPFP.jpg'));
+  const [imageBanner, setImageBanner] = useState(
+    require('../assets/testPFP.jpg'),
+  );
+  // const [tImg, setTImg] = useState(null);
+
+  const {friendId} = route.params;
+
+  const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [nameState, setName] = useState('user');
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    console.log('Refreshing data');
+    getUser();
+    setRefreshing(false);
+  });
+
+  const getUser = async () => {
+    // const url = await storage()
+    //   .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
+    //   .getDownloadURL();
+
+    // console.log('URL == ', url);
+    // setTImg(url);
+    // console.log('tImg -- ', tImg);
+
+    const currentUser = await firestore()
+      .collection('users')
+      .doc(friendId)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          console.log('user data ', documentSnapshot.data());
+          getInterests(documentSnapshot.data());
+          // setImagePfp(documentSnapshot.data().pfp);
+          // setImageBanner(documentSnapshot.data().banner);
+          setUserData(documentSnapshot.data());
+          setName(
+            documentSnapshot.data().firstName +
+              ' ' +
+              documentSnapshot.data().lastName,
+          );
+        }
+      });
+  };
+
+  const getInterests = async allData => {
+    console.log('getInterests called');
+
+    try {
+      for (let i = 0; i < allData.interests.length; i++) {
+        interestArray[i] = allData.interests[i];
+      }
+    } catch (err) {
+      console.log('Error fetching and assinging interests - ', err);
+    }
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  // When the screen is loaded, below functions are called
+  useEffect(() => {
+    console.log('passed id ', friendId);
+    getUser();
+  }, []);
+
+  const getPfp = () => {
+    console.log('getPfp called');
+    firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        console.log('GET =  ', documentSnapshot.get('pfp'));
+        setImagePfp(documentSnapshot.get('pfp'));
+      });
+  };
 
   return (
-    // <ScrollView>
-    <View
+    //add SafeAreaView tag here if i dont want the background img covering past notch.
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{
-        // Try setting `flexDirection` to `"row"`.
         flexDirection: 'column',
         flex: 1,
       }}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={{flex: 3, backgroundColor: '#aba'}}>
-          <Text>Background img</Text>
+        <View
+          style={{
+            backgroundColor: '#abc',
+            width: 400,
+          }}>
+          <BannerImage source={imageBanner} />
+          {/* <Image source={require('../assets/testPFP.jpg')} /> */}
         </View>
 
         <View style={styles.headerTile}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.headerTileMain]}>Sam Smith</Text>
+            <Text style={[styles.headerTileMain]}>{nameState}</Text>
             <Text style={{color: '#efaffc'}}>3rd</Text>
             <View
               style={{
@@ -70,7 +189,8 @@ const ProfileUser = ({navigation}) => {
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  alert('you clicked QR button');
+                  // alert('you clicked QR button');
+                  toggleModal();
                 }}>
                 <Image
                   style={{height: 30, width: 30}}
@@ -87,14 +207,6 @@ const ProfileUser = ({navigation}) => {
                   style={styles.bumpBtn}
                   source={require('../assets/icons/bump.png')}
                 />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.touchOpac}
-                onPress={() => {
-                  alert('you clicked Edit button');
-                }}>
-                <Text style={styles.msgBtn}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -113,7 +225,9 @@ const ProfileUser = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 0.8, 1]}>
-              <Text style={styles.moduleText}>Module1</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[0] : 'Module 1'}
+              </Text>
             </LinearGradient>
 
             <LinearGradient
@@ -128,7 +242,9 @@ const ProfileUser = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 1]}>
-              <Text style={styles.moduleText}>Module2</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[1] : 'Module 2'}
+              </Text>
             </LinearGradient>
 
             <LinearGradient
@@ -143,7 +259,26 @@ const ProfileUser = ({navigation}) => {
               end={{x: 1, y: 0.5}}
               style={styles.moduleColor}
               locations={[0.2, 0.4, 0.7, 1]}>
-              <Text style={styles.moduleText}>Module3</Text>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[2] : 'Module 3'}
+              </Text>
+            </LinearGradient>
+
+            <LinearGradient
+              colors={[
+                '#aab9F2',
+                'rgba(135, 222, 255, 0.7)',
+                'rgba(165, 231, 160, 0.3)',
+                'rgba(20, 200, 100, 0.5)',
+              ]}
+              style={styles.linearGradient}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0.5}}
+              style={styles.moduleColor}
+              locations={[0.2, 0.4, 0.7, 1]}>
+              <Text style={styles.moduleText}>
+                {userData ? userData.modules[3] : 'Module 4'}
+              </Text>
             </LinearGradient>
           </View>
         </View>
@@ -152,8 +287,7 @@ const ProfileUser = ({navigation}) => {
           <ProfileBox>
             <SocialTabTitle>About me </SocialTabTitle>
             <AboutMeText>
-              I'm one of the first users (other then the admin) to use Bump
-              Into!
+              {userData ? userData.about : 'No about yet!'}
             </AboutMeText>
           </ProfileBox>
 
@@ -167,7 +301,9 @@ const ProfileUser = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText> #Sam1789 </SocialText>
+                <SocialText>
+                  {userData ? userData.socials[1] : 'No discord!'}
+                </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -182,7 +318,7 @@ const ProfileUser = ({navigation}) => {
 
                 <LineSplit />
                 <SocialText style={{fontSize: 13, left: 5}}>
-                  w1737709@my.westminster.ac.uk
+                  {userData ? userData.socials[2] : 'No email!'}
                 </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
@@ -197,7 +333,9 @@ const ProfileUser = ({navigation}) => {
                 />
 
                 <LineSplit />
-                <SocialText>sam-s</SocialText>
+                <SocialText>
+                  {userData ? userData.socials[0] : 'No instagram!'}
+                </SocialText>
 
                 <CopyIcon source={require('../assets/icons/copy60.png')} />
               </SocialTab>
@@ -206,21 +344,11 @@ const ProfileUser = ({navigation}) => {
 
           <InterestBox>
             <SocialTabTitle>Interests</SocialTabTitle>
-            <InterestBubble>
-              <InterestBubbleText>Fifa</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>HipHop</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Football</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Gym</InterestBubbleText>
-            </InterestBubble>
-            <InterestBubble>
-              <InterestBubbleText>Hiking</InterestBubbleText>
-            </InterestBubble>
+            {interestArray.map(inter => {
+              if (inter != 'null') {
+                return <InterestBoxProfile key={inter} interestText={inter} />;
+              }
+            })}
           </InterestBox>
         </View>
       </View>
@@ -236,10 +364,38 @@ const ProfileUser = ({navigation}) => {
           top: 70,
           left: 20,
         }}>
-        <PfpImage source={require('../assets/testPFP.jpg')} />
+        <PfpImage source={imagePfp} />
+        {/* <Image source={imageBanner} /> */}
+        {/* <Image source={tImg} /> */}
       </View>
-    </View>
-    // </ScrollView>
+
+      <Modal isVisible={isModalVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+          }}>
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            This is your profile QR
+          </Text>
+
+          <QRCode
+            value="test!"
+            color={'#2C8DDB'}
+            backgroundColor={'white'}
+            size={100}
+            // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
+            logoMargin={2}
+            logoSize={20}
+            logoBorderRadius={10}
+            logoBackgroundColor={'transparent'}
+          />
+
+          <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
+    </ScrollView>
   );
 };
 
@@ -252,6 +408,15 @@ const copyToClipboard = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // paddingTop: StatusBar.currentHeight,
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    // marginHorizontal: 20,
+  },
+
   headerTile: {
     backgroundColor: '#f5f5f5',
     paddingTop: 45,

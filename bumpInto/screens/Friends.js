@@ -80,7 +80,6 @@ const Friends = ({route, navigation}) => {
   const getFriendIds = async friends => {
     var pos = 0;
     friends.forEach(f => {
-      console.log('o yes ', f.id);
       friendsIdArray[pos] = f.id;
       pos++;
     });
@@ -102,10 +101,10 @@ const Friends = ({route, navigation}) => {
       });
   };
 
-  const navigateChatPage = (fName, friendId) => {
-    console.log('navigating to chats page with ', fName);
-    navigation.navigate('ChatsPage', {fName, friendId});
-  };
+  // const navigateChatPage = (fName, friendId) => {
+  //   console.log('navigating to chats page with ', fName);
+  //   navigation.navigate('ChatsPage', {fName, friendId});
+  // };
 
   const navigateFriendProfile = friendId => {
     console.log('navigating to the profile page of ', friendId);
@@ -132,10 +131,10 @@ const Friends = ({route, navigation}) => {
 
         <FriendsBox>
           {friendsNameArray.map(fName => {
-            console.log('first log', friendsIdArray[counter]);
-            console.log('second log', friendsNameArray[counter]);
+            console.log('friendsName.map');
 
             if (fName != 'null') {
+              console.log('fname ====== ', fName);
               return (
                 <FriendsCard
                   key={fName}
@@ -143,12 +142,6 @@ const Friends = ({route, navigation}) => {
                   friendPfp={require('../assets/testPFP.jpg')}
                   friendId={friendsIdArray[counter]}
                   onPress={() => navigateFriendProfile(friendsIdArray[counter])}
-                  // onPress={() => removeInterestConf(inter)}
-                  onPress={() =>
-                    navigateChatPage(fName, friendsIdArray[counter])
-                  }
-
-                  // onPress={() => navigation.navigate('ChatsPage', {fName, friendsIdArray[counter]})}
                 />
               );
             } else {

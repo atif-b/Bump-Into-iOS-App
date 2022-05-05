@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Button,
   Keyboard,
+  Image,
 } from 'react-native';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
+import Modal from 'react-native-modal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // // // // // // // TO DO // // // // // // //
 //
@@ -30,6 +33,7 @@ var friendsPfpArray = ['null'];
 
 export default function Home({navigation, route}) {
   const {user, logout} = useContext(AuthContext);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const getUserFriends = async () => {
     console.log('getting doc id');
@@ -40,7 +44,6 @@ export default function Home({navigation, route}) {
       .collection('friends')
       .get()
       .then(querySnapshot => {
-        // console.log(querySnapshot.size);
         console.log('q snap ', querySnapshot);
 
         getFriendIds(querySnapshot);
@@ -57,7 +60,6 @@ export default function Home({navigation, route}) {
 
         querySnapshot.forEach(documentSnapshot => {
           if (documentSnapshot.id == 'del') {
-            // skip over the 'del' so its not added to array
             console.log('Del user skipped');
           } else {
             friendsIdArray[pos] = documentSnapshot.id;
@@ -70,11 +72,13 @@ export default function Home({navigation, route}) {
   };
 
   useEffect(() => {
-    // createFriendsStore();
     console.log('ex first?');
     getUserFriends();
     if (friendsNameArray[0] == 'null') {
       createFriendsStore();
+      toggleModal();
+      // Put that somewhere where it will only run once, or only run
+      // if parts of the profile remain as null?
     }
   }, []);
 
@@ -106,18 +110,6 @@ export default function Home({navigation, route}) {
     });
   };
 
-  // const removeDelData = async () => {
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .collection('friends')
-  //     .doc('del')
-  //     .delete()
-  //     .then(() => {
-  //       console.log('Del user removed');
-  //     });
-  // };
-
   const getFriends = async (counter, id) => {
     const currentFriend = await firestore()
       .collection('users')
@@ -127,11 +119,12 @@ export default function Home({navigation, route}) {
         if (documentSnapshot.exists) {
           friendsNameArray[counter] = documentSnapshot.data().firstName;
           friendsPfpArray[counter] = documentSnapshot.data().pfp;
-
-          console.log('this getting so weird ', friendsNameArray[counter]);
-          // return documentSnapshot.data().firstName;
         }
       });
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
   //////////NEED TO DO THE ABOVE, CHECK IF EXISTS, IF IT DOESNT THEN CALL CREATEPROFILE
@@ -154,7 +147,10 @@ export default function Home({navigation, route}) {
       </View>
 
       <HomeBox>
-        <TouchableOpacity onPress={() => navigation.navigate('Chats')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Chats', {friendsNameArray, friendsPfpArray})
+          }>
           <LinearGradient
             colors={[
               '#6D83FB',
@@ -286,6 +282,28 @@ export default function Home({navigation, route}) {
 
       {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
       {/* </View> */}
+
+      <Modal isVisible={isModalVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image source={require('../assets/icons/bulb.png')} />
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            Welcome to Bump-Into!
+          </Text>
+          <Text style={{textAlign: 'center', fontSize: 18, padding: 6}}>
+            To make the most out of your account, go to your profile
+            <Ionicons name="person-outline" size={20} />
+            and edit it. You can add as much or as little about yourself.
+          </Text>
+          <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
     </View>
   );
 }

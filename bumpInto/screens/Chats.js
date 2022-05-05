@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   Text,
   View,
@@ -14,7 +14,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
 import {AuthContext} from '../navigation/AuthProvider';
-import FormButton from '../components/FormButton';
 import auth from '@react-native-firebase/auth';
 import {
   ChatBox,
@@ -25,7 +24,8 @@ import {
   PfpImage,
   PfpView,
 } from '../styles/ChatsStyles';
-import LinearGradient from 'react-native-linear-gradient';
+import firestore from '@react-native-firebase/firestore';
+import MessagesCard from '../components/MessagesCard';
 
 //Turn 'To Do' into ABOUT, to explain what the file does.
 
@@ -39,9 +39,32 @@ import LinearGradient from 'react-native-linear-gradient';
 var friendsIdArray = ['null'];
 var friendsNameArray = ['null'];
 var friendsPfpArray = ['null'];
+var counter = 0;
 
-const Chats = ({navigation, route}) => {
+const Chats = ({route, navigation}) => {
   const {user, logout} = useContext(AuthContext);
+  const {friendsNameArray, friendsPfpArray} = route.params;
+
+  useEffect(() => {
+    counter = 0;
+    console.log('====================================');
+    console.log(friendsNameArray);
+    console.log('====================================');
+    // if (friendsIdArray == 'null') {
+    //   getUserFriends();
+    // } else {
+    //   var counter = 0;
+    //   for (let i = 0; i < friendsIdArray.length; i++) {
+    //     friendsNameArray[i] = getFriends(friendsIdArray[i]);
+    //   }
+    //   console.log(friendsNameArray);
+    // }
+  }, []);
+
+  const navigateChatPage = (fName, friendId) => {
+    console.log('navigating to chats page with ', fName);
+    navigation.navigate('ChatsPage', {fName, friendId});
+  };
 
   return (
     //NEED TO MAKE THIS SCROLLABLE
@@ -68,7 +91,36 @@ const Chats = ({navigation, route}) => {
           </View>
 
           <ChatBox>
-            <TouchableOpacity
+            {friendsNameArray.map(fName => {
+              console.log('first log', friendsIdArray[counter]);
+              console.log('second log', friendsNameArray[counter]);
+
+              if (fName != 'null') {
+                return (
+                  <MessagesCard
+                    key={fName}
+                    friendName={fName}
+                    friendPfp={require('../assets/testPFP.jpg')}
+                    onPress={() =>
+                      navigateChatPage(fName, friendsIdArray[counter])
+                    }
+                  />
+                );
+              } else {
+                console.log('well.....');
+                console.log(friendsIdArray);
+                if (friendsNameArray.size < 1) {
+                  return (
+                    <Text key={'noF'} style={styles.noFText}>
+                      You havent added any friends to message!
+                    </Text>
+                  );
+                }
+              }
+              counter++;
+            })}
+
+            {/* <TouchableOpacity
               onPress={() => {
                 alert('you clicked message button');
               }}>
@@ -79,60 +131,8 @@ const Chats = ({navigation, route}) => {
                   <PfpImage source={require('../assets/testPFP.jpg')} />
                 </PfpView>
               </ChatTileUnread>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                // alert('you clicked message button');
-                navigation.navigate('ChatsPage');
-              }}>
-              <ChatTileUnread>
-                <TileTxtMain> Sally </TileTxtMain>
-                <TileTxtSub> 1 new messages </TileTxtSub>
-                <PfpView>
-                  <PfpImage source={require('../assets/testPFP.jpg')} />
-                </PfpView>
-              </ChatTileUnread>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                alert('you clicked message button');
-              }}>
-              <ChatTileRead>
-                <TileTxtMain> Sam </TileTxtMain>
-                <TileTxtSub> Nope not yet </TileTxtSub>
-                <PfpView>
-                  <PfpImage source={require('../assets/testPFP.jpg')} />
-                </PfpView>
-              </ChatTileRead>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </ChatBox>
-
-          {/* <View style={{flex: 0.3, backgroundColor: '#f4f4f4'}}> */}
-          {/* <QRCode
-          value="test!"
-          color={'#2C8DDB'}
-          backgroundColor={'white'}
-          size={100}
-          // logo={require('../../../embed_logo_file_path')} // or logo={{uri: base64logo}}
-          logoMargin={2}
-          logoSize={20}
-          logoBorderRadius={10}
-          logoBackgroundColor={'transparent'}
-        /> */}
-
-          {/* <Button title="Log out" onPress={() => navigation.navigate('Login')} /> */}
-          {/* <Button title="Log out" onPress={() => logout()} /> */}
-          {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
-          {/* <TouchableOpacity
-          buttonTitle="Logout"
-          onPress={() => LoadLogin(navigation, logout)}>
-          <LogoutBtn>Logout</LogoutBtn>
-        </TouchableOpacity> */}
-
-          {/* Title is what the button says. naviagation.naviagte must have stack.screen name (that is from stack.nav) */}
-          {/* </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -150,5 +150,12 @@ const styles = StyleSheet.create({
     marginRight: 2,
     borderWidth: 5,
     marginBottom: 10,
+  },
+  noFText: {
+    backgroundColor: '#f3f3f3',
+    fontSize: 20,
+    textAlign: 'center',
+    paddingVertical: 60,
+    margin: 20,
   },
 });

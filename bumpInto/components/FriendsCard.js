@@ -29,16 +29,11 @@ const FriendsCard = ({
           <PfpImage source={friendPfp} />
         </PfpView>
         <TileTxtMain> {friendName} </TileTxtMain>
-        <MessageIcon {...rest}>
-          {/* // onPress={() => {
-          //   alert('you clicked message button');
-            
-          // }}> */}
+        {/* <MessageIcon {...rest}>
           <Image
-            // style={styles.bumpBtn}
             source={require('../assets/icons/message.png')}
           />
-        </MessageIcon>
+        </MessageIcon> */}
       </FriendTile>
     </TouchableOpacity>
   );

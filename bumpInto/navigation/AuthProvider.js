@@ -2,13 +2,33 @@ import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-
-// import Providers from './index';
+import Modal from 'react-native-modal';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+  Keyboard,
+  Image,
+} from 'react-native';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisibleReg, setModalVisibleReg] = useState(false);
+  const [modalText, setModalText] = useState('');
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const toggleModalReg = () => {
+    setModalVisibleReg(!isModalVisibleReg);
+  };
+
   // const navigation = useNavigation();
 
   return (
@@ -20,7 +40,9 @@ export const AuthProvider = ({children}) => {
           try {
             await auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
-            console.log(e);
+            console.log('here is issue ', e);
+            setModalText('Incorrect email and/or password entered!');
+            toggleModal();
           }
         },
         register: async (email, password, firstName, lastName) => {
@@ -61,11 +83,12 @@ export const AuthProvider = ({children}) => {
               });
 
             await auth().currentUser.updateProfile(update);
+            // await auth().currentUser.sendEmailVerification();
+            // Need to delete my uni email from the auth + data storen
           } catch (e) {
-            console.log(
-              'error while creating firestore friends collection: ',
-              e,
-            );
+            console.log('error: ', e);
+            setModalText('This email is already registered! Please login.');
+            toggleModal();
           }
         },
         logout: async () => {
@@ -73,13 +96,29 @@ export const AuthProvider = ({children}) => {
             await auth()
               .signOut()
               .then(() => console.log('User Signed out!'));
-            // .then(() => navigation.navigate('Login'));
           } catch (e) {
             console.log('Error while logging out: ' + e);
           }
         },
       }}>
       {children}
+
+      <Modal isVisible={isModalVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image source={require('../assets/icons/error.png')} />
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            {modalText}
+          </Text>
+          <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
     </AuthContext.Provider>
   );
 };

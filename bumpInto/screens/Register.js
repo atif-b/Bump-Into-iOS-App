@@ -16,24 +16,65 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
+import Modal from 'react-native-modal';
 
 const Register = ({navigation, route}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
-
-  // const [confirmPassword, setConfirmPassword] = useState();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   const {register} = useContext(AuthContext);
 
-  // console.log('********');
-  // if (route.params?.test) {
-  //   console.log('yess');
-  //   console.log(route.params?.test);
-  // } else {
-  //   console.log('nope');
-  // }
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+  const LoginCheck = (
+    email,
+    password,
+    firstName,
+    lastName,
+    register,
+    navigation,
+  ) => {
+    console.log('email: ' + email + ' password: ' + password);
+    if (
+      email == '' ||
+      password == '' ||
+      firstName == '' ||
+      lastName == '' ||
+      typeof email == 'undefined' ||
+      typeof password == 'undefined' ||
+      typeof firstName == 'undefined' ||
+      typeof lastName == 'undefined'
+    ) {
+      // alert('Please do not leave any details blank');
+      setModalText('Please fill all the fields!');
+      toggleModal();
+    } else {
+      if (
+        email.includes('@my.westminster.ac.uk') ||
+        email.includes('@westminster.ac.uk')
+      ) {
+        // navigation.navigate('Home')
+        register(email, password, firstName, lastName);
+      } else {
+        setModalText(
+          'Please use your Westminster email (@my.westminster.ac.uk)',
+        );
+        toggleModal();
+        // alert('Please use your Westminster email (@my.westminster.ac.uk)');
+      }
+    }
+  };
+
+  const LoadHome = (email, navigation) => {
+    navigation.navigate('Home', {
+      email: 'test',
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -99,49 +140,27 @@ const Register = ({navigation, route}) => {
       <TouchableOpacity
         style={styles.forgotButton}
         onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.navButtonText}>Have an acount? Sign in</Text>
+        <Text style={styles.navButtonText}>Have an account? Sign in</Text>
       </TouchableOpacity>
+
+      <Modal isVisible={isModalVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image source={require('../assets/icons/error.png')} />
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            {modalText}
+          </Text>
+          <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
     </ScrollView>
   );
-};
-
-const LoginCheck = (
-  email,
-  password,
-  firstName,
-  lastName,
-  register,
-  navigation,
-) => {
-  console.log('email: ' + email + ' password: ' + password);
-  if (
-    email == '' ||
-    password == '' ||
-    firstName == '' ||
-    lastName == '' ||
-    typeof email == 'undefined' ||
-    typeof password == 'undefined' ||
-    typeof firstName == 'undefined' ||
-    typeof lastName == 'undefined'
-  ) {
-    alert('Please do not leave any details blank');
-  } else {
-    if (
-      email.includes('@my.westminster.ac.uk') ||
-      email.includes('@westminster.ac.uk')
-    ) {
-      // navigation.navigate('Home')
-      register(email, password, firstName, lastName);
-    } else {
-      alert('Please use your Westminster email (@my.westminster.ac.uk)');
-    }
-  }
-};
-
-const LoadHome = (email, navigation) => {
-  navigation.navigate('Home', {
-    email: 'test',
-  });
 };
 
 export default Register;
