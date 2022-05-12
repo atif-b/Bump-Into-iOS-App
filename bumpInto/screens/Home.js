@@ -44,7 +44,7 @@ export default function Home({navigation, route}) {
       .collection('friends')
       .get()
       .then(querySnapshot => {
-        console.log('q snap ', querySnapshot);
+        // console.log('q snap ', querySnapshot);
 
         getFriendIds(querySnapshot);
 
@@ -53,6 +53,7 @@ export default function Home({navigation, route}) {
         async function testGet() {
           for (let i = 0; i < friendsIdArray.length; i++) {
             await getFriends(i, friendsIdArray[i]);
+            console.log('ids ', friendsIdArray);
             console.log('names ', friendsNameArray);
             console.log('pfps ', friendsPfpArray);
           }
@@ -149,7 +150,11 @@ export default function Home({navigation, route}) {
       <HomeBox>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('Chats', {friendsNameArray, friendsPfpArray})
+            navigation.navigate('Chats', {
+              friendsNameArray,
+              friendsPfpArray,
+              friendsIdArray,
+            })
           }>
           <LinearGradient
             colors={[
@@ -190,7 +195,7 @@ export default function Home({navigation, route}) {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Bumped')}>
           <LinearGradient
             colors={[
               '#6D83FB',
@@ -212,7 +217,11 @@ export default function Home({navigation, route}) {
 
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('Friends', {friendsNameArray, friendsPfpArray})
+            navigation.navigate('Friends', {
+              friendsNameArray,
+              friendsPfpArray,
+              // friendsIdArray,
+            })
           }>
           <LinearGradient
             colors={[

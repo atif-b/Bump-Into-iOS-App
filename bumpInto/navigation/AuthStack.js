@@ -76,7 +76,7 @@ const AuthStack = () => {
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <View>
-                <Ionicons size={25} name="arrow-back-outline"></Ionicons>
+                <Ionicons size={25} name="arrow-back-outline" />
               </View>
             </TouchableOpacity>
           ),

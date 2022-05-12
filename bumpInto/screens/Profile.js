@@ -8,7 +8,6 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  StatusBar,
   RefreshControl,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -25,8 +24,6 @@ import {
   SocialTabTitle,
   AboutMeText,
   InterestBox,
-  InterestBubble,
-  InterestBubbleText,
   PfpImage,
 } from '../styles/ProfileStyles';
 import {AuthContext} from '../navigation/AuthProvider';
@@ -43,9 +40,6 @@ import QRCode from 'react-native-qrcode-svg';
 // Qr button functionality
 // Decide if I still need module 'buttons'?
 // Fix copy to clipboard
-//
-// Fix banner image
-// Call all userData
 //
 // Need to make useEffect to run each time the page is clicked on
 // Maybe do an if statement to see if current 'imagePfp' matches the one
@@ -66,7 +60,8 @@ var interestArray = [
 ];
 
 var modulesArray = ['module1', 'module2', 'module3', ''];
-var socialsArray = ['insta', 'discord', 'email']; ///the order the i designed is actually disc/email/insta
+var socialsArray = ['insta', 'discord', 'email'];
+///the order the I designed is actually disc/email/insta
 
 const Profile = ({navigation}) => {
   const {user, logout} = useContext(AuthContext);
@@ -74,29 +69,17 @@ const Profile = ({navigation}) => {
   const [imageBanner, setImageBanner] = useState(
     require('../assets/testPFP.jpg'),
   );
-  const [tImg, setTImg] = useState(null);
 
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [copiedText, setCopiedText] = useState('');
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    console.log('Refreshing data');
-    getUser();
-    setRefreshing(false);
-  });
+  useEffect(() => {
+    getUserData();
+  }, []);
 
-  const getUser = async () => {
-    //   .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
-    const url = await storage()
-      .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
-      .getDownloadURL();
-
-    console.log('URL == ', url);
-    setTImg(url);
-    console.log('tImg -- ', tImg);
-
+  const getUserData = async () => {
     const currentUser = await firestore()
       .collection('users')
       .doc(user.uid)
@@ -113,8 +96,6 @@ const Profile = ({navigation}) => {
   };
 
   const getInterests = async allData => {
-    console.log('getInterests called');
-
     try {
       for (let i = 0; i < allData.interests.length; i++) {
         interestArray[i] = allData.interests[i];
@@ -124,43 +105,24 @@ const Profile = ({navigation}) => {
     }
   };
 
-  // function onResult(QuerySnapshot) {
-  //   console.log('Got Users collection result.');
-  // }
-
-  // function onError(error) {
-  //   console.error(error);
-  // }
-
-  // firestore().collection('Users').doc(user.uid).onSnapshot(onResult, onError);
-
-  user.providerData.forEach(userInfo => {
-    console.log(userInfo);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    console.log('Refreshing data');
+    getUserData();
+    setRefreshing(false);
   });
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  // When the screen is loaded, below functions are called
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const getPfp = () => {
-    console.log('getPfp called');
-    firestore()
-      .collection('users')
-      .doc(user.uid)
-      .get()
-      .then(documentSnapshot => {
-        console.log('GET =  ', documentSnapshot.get('pfp'));
-        setImagePfp(documentSnapshot.get('pfp'));
-      });
+  const copyToClipboard = async copyString => {
+    await setCopiedText('copyString');
+    Clipboard.setString('copiedText');
+    alert('Coppied ' + copyString + ' to clipboard');
   };
 
   return (
-    //add SafeAreaView tag here if i dont want the background img covering past notch.
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -170,13 +132,8 @@ const Profile = ({navigation}) => {
         flex: 1,
       }}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View
-          style={{
-            backgroundColor: '#abc',
-            width: 400,
-          }}>
+        <View>
           <BannerImage source={imageBanner} />
-          {/* <Image source={require('../assets/testPFP.jpg')} /> */}
         </View>
 
         <View style={styles.headerTile}>
@@ -192,26 +149,15 @@ const Profile = ({navigation}) => {
                 marginTop: -70,
                 alignItems: 'center',
               }}>
+              {/* QR CODE */}
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  // alert('you clicked QR button');
                   toggleModal();
                 }}>
                 <Image
                   style={{height: 30, width: 30}}
                   source={require('../assets/icons/qr-code.png')}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.touchOpac}
-                onPress={() => {
-                  alert('you clicked bump button');
-                }}>
-                <Image
-                  style={styles.bumpBtn}
-                  source={require('../assets/icons/bump.png')}
                 />
               </TouchableOpacity>
 
@@ -307,7 +253,7 @@ const Profile = ({navigation}) => {
 
           <ProfileBox>
             <SocialTabTitle>Social</SocialTabTitle>
-            <TouchableOpacity onPress={copyToClipboard}>
+            <TouchableOpacity onPress={() => copyToClipboard(socialsArray[1])}>
               <SocialTab>
                 <Image
                   style={{height: 29, width: 40}}
@@ -323,7 +269,7 @@ const Profile = ({navigation}) => {
               </SocialTab>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={copyToClipboard}>
+            <TouchableOpacity onPress={() => copyToClipboard(socialsArray[2])}>
               <SocialTab>
                 <Image
                   style={{height: 29, width: 40}}
@@ -339,7 +285,7 @@ const Profile = ({navigation}) => {
               </SocialTab>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={copyToClipboard}>
+            <TouchableOpacity onPress={() => copyToClipboard(socialsArray[0])}>
               <SocialTab>
                 <Image
                   style={{height: 29, width: 40}}
@@ -379,8 +325,6 @@ const Profile = ({navigation}) => {
           left: 20,
         }}>
         <PfpImage source={imagePfp} />
-        {/* <Image source={imageBanner} /> */}
-        <Image source={tImg} />
       </View>
 
       <Modal isVisible={isModalVisible} backdropColor="grey">
@@ -415,16 +359,9 @@ const Profile = ({navigation}) => {
 
 export default Profile;
 
-const copyToClipboard = () => {
-  Clipboard.setString('#Taf1789');
-  console.log(Clipboard.getString());
-  alert('Coppied to clipboard!');
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
     backgroundColor: 'pink',

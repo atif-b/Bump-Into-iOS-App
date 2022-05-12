@@ -14,6 +14,8 @@ import ProfileUser from '../screens/ProfileUser';
 import EditProfile from '../screens/EditProfile';
 import ChatsPage from '../screens/ChatsPage';
 import ScanQR from '../screens/ScanQR';
+import Bumped from '../screens/Bumped';
+import FriendReqs from '../screens/FriendReqs';
 
 import Tabs from './BottomTab';
 
@@ -65,6 +67,18 @@ const AppStack = () => {
       <Stack.Screen
         name="ScanQR"
         component={ScanQR}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Bumped"
+        component={Bumped}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="FriendReqs"
+        component={FriendReqs}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

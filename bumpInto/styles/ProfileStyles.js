@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 
-export const BannerImage = styled.View`
+export const BannerImage = styled.Image`
   height: 130px;
   align-self: center;
   width: 390px;
   resize-mode: cover;
 `;
 
-//had flex: 3px; ^^^ removed
+export const PfpImage = styled.Image`
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+`;
 
 export const ProfileBox = styled.View`
   background-color: #f3f3f3;
@@ -69,21 +73,4 @@ export const bubbleRow = styled.View`
   padding: 7px;
   margin-bottom: 10px;
   flex-direction: row;
-`;
-
-export const InterestBubble = styled.View`
-  background-color: #fff;
-  padding: 10px 10px;
-  margin: 1px;
-  border-radius: 10px;
-`;
-
-export const InterestBubbleText = styled.Text`
-  font-size: 16px;
-`;
-
-export const PfpImage = styled.Image`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
 `;

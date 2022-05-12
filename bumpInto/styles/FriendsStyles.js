@@ -53,3 +53,7 @@ export const MessageIcon = styled.TouchableOpacity`
   bottom: 20px;
   position: absolute;
 `;
+
+export const FriendRequestBox = styled.TouchableOpacity`
+  padding: 15px;
+`;

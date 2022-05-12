@@ -18,28 +18,22 @@ import {AuthContext} from '../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 import Modal from 'react-native-modal';
 
-const Register = ({navigation, route}) => {
+const Register = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [modalText, setModalText] = useState('');
 
   const {register} = useContext(AuthContext);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const LoginCheck = (
-    email,
-    password,
-    firstName,
-    lastName,
-    register,
-    navigation,
-  ) => {
-    console.log('email: ' + email + ' password: ' + password);
+
+  const LoginCheck = () => {
     if (
       email == '' ||
       password == '' ||
@@ -50,7 +44,6 @@ const Register = ({navigation, route}) => {
       typeof firstName == 'undefined' ||
       typeof lastName == 'undefined'
     ) {
-      // alert('Please do not leave any details blank');
       setModalText('Please fill all the fields!');
       toggleModal();
     } else {
@@ -58,22 +51,14 @@ const Register = ({navigation, route}) => {
         email.includes('@my.westminster.ac.uk') ||
         email.includes('@westminster.ac.uk')
       ) {
-        // navigation.navigate('Home')
         register(email, password, firstName, lastName);
       } else {
         setModalText(
           'Please use your Westminster email (@my.westminster.ac.uk)',
         );
         toggleModal();
-        // alert('Please use your Westminster email (@my.westminster.ac.uk)');
       }
     }
-  };
-
-  const LoadHome = (email, navigation) => {
-    navigation.navigate('Home', {
-      email: 'test',
-    });
   };
 
   return (
@@ -93,7 +78,6 @@ const Register = ({navigation, route}) => {
         labelValue={password}
         onChangeText={userPassword => setPassword(userPassword)}
         placeholderText="Password"
-        iconType="lock"
         secureTextEntry={true}
       />
 
@@ -109,28 +93,11 @@ const Register = ({navigation, route}) => {
         placeholderText="Last name"
       />
 
-      {/* <FormInput
-        labelValue={confirmPassword}
-        onChangeText={userPassword => setPassword(userPassword)}
-        placeholderText="Confirm Password"
-        iconType="lock"
-        secureTextEntry={true}
-      /> */}
-
-      <FormButton
-        buttonTitle="Register"
-        // onPress={() => register(email, password)}
-        onPress={() =>
-          LoginCheck(email, password, firstName, lastName, register, navigation)
-        }
-      />
+      <FormButton buttonTitle="Register" onPress={() => LoginCheck()} />
 
       <View style={styles.textPrivate}>
         <Text>By registering, you confirm that you accept our </Text>
-        <TouchableOpacity
-          onPress={() =>
-            alert('Terms Clicked! (Think id need to link to a seperate page)')
-          }>
+        <TouchableOpacity onPress={() => alert('Terms Clicked!')}>
           <Text style={{color: 'orange'}}>Terms of service</Text>
         </TouchableOpacity>
         <Text> and </Text>
@@ -173,9 +140,9 @@ const styles = StyleSheet.create({
     paddingTop: 90,
   },
   text: {
-    fontSize: 28,
-    marginBottom: 10,
-    color: '#051d5f',
+    fontSize: 32,
+    marginBottom: 20,
+    color: '#0e64e5',
   },
   navButton: {
     marginTop: 15,

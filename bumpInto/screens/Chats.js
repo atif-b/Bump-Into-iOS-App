@@ -39,35 +39,26 @@ import MessagesCard from '../components/MessagesCard';
 var friendsIdArray = ['null'];
 var friendsNameArray = ['null'];
 var friendsPfpArray = ['null'];
-var counter = 0;
 
 const Chats = ({route, navigation}) => {
   const {user, logout} = useContext(AuthContext);
-  const {friendsNameArray, friendsPfpArray} = route.params;
+  const {friendsNameArray, friendsPfpArray, friendsIdArray} = route.params;
 
   useEffect(() => {
     counter = 0;
     console.log('====================================');
-    console.log(friendsNameArray);
+    console.log('friends names: ', friendsNameArray);
+    console.log('friends ids: ', friendsIdArray);
+    console.log('friends pfp: ', friendsPfpArray[1].uri);
     console.log('====================================');
-    // if (friendsIdArray == 'null') {
-    //   getUserFriends();
-    // } else {
-    //   var counter = 0;
-    //   for (let i = 0; i < friendsIdArray.length; i++) {
-    //     friendsNameArray[i] = getFriends(friendsIdArray[i]);
-    //   }
-    //   console.log(friendsNameArray);
-    // }
   }, []);
 
-  const navigateChatPage = (fName, friendId) => {
-    console.log('navigating to chats page with ', fName);
-    navigation.navigate('ChatsPage', {fName, friendId});
+  const navigateChatPage = (fName, friendId, friendPfp) => {
+    console.log('navigating to chats page with ', fName, friendId, friendPfp);
+    navigation.navigate('ChatsPage', {fName, friendId, friendPfp});
   };
 
   return (
-    //NEED TO MAKE THIS SCROLLABLE
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
         style={{
@@ -91,25 +82,22 @@ const Chats = ({route, navigation}) => {
           </View>
 
           <ChatBox>
-            {friendsNameArray.map(fName => {
-              console.log('first log', friendsIdArray[counter]);
-              console.log('second log', friendsNameArray[counter]);
+            {friendsIdArray.map((fID, index) => {
+              const fNameTile = friendsNameArray[index];
+              const fPfp = friendsPfpArray[index].uri;
 
-              if (fName != 'null') {
+              if (fID != 'null') {
                 return (
                   <MessagesCard
-                    key={fName}
-                    friendName={fName}
-                    friendPfp={require('../assets/testPFP.jpg')}
-                    onPress={() =>
-                      navigateChatPage(fName, friendsIdArray[counter])
-                    }
+                    key={fID}
+                    friendName={fNameTile}
+                    // friendPfp={require('../assets/testPFP.jpg')}
+                    friendPfp={fPfp}
+                    onPress={() => navigateChatPage(fNameTile, fID, fPfp)}
                   />
                 );
               } else {
-                console.log('well.....');
-                console.log(friendsIdArray);
-                if (friendsNameArray.size < 1) {
+                if (friendsNameArray.length < 1) {
                   return (
                     <Text key={'noF'} style={styles.noFText}>
                       You havent added any friends to message!
@@ -117,21 +105,7 @@ const Chats = ({route, navigation}) => {
                   );
                 }
               }
-              counter++;
             })}
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                alert('you clicked message button');
-              }}>
-              <ChatTileUnread>
-                <TileTxtMain> Tom </TileTxtMain>
-                <TileTxtSub> 3 new messages </TileTxtSub>
-                <PfpView>
-                  <PfpImage source={require('../assets/testPFP.jpg')} />
-                </PfpView>
-              </ChatTileUnread>
-            </TouchableOpacity> */}
           </ChatBox>
         </View>
       </ScrollView>

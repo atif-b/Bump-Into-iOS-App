@@ -9,6 +9,8 @@ import ProfileUser from '../screens/ProfileUser';
 import EditProfile from '../screens/EditProfile';
 import ChatsPage from '../screens/ChatsPage';
 import ScanQR from '../screens/ScanQR';
+import Bumped from '../screens/Bumped';
+import FriendReqs from '../screens/FriendReqs';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -87,6 +89,22 @@ const Tabs = (navigation, route) => {
       <Tab.Screen
         name="ScanQR"
         component={ScanQR}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="Bumped"
+        component={Bumped}
+        options={{
+          tabBarButton: props => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="FriendReqs"
+        component={FriendReqs}
         options={{
           tabBarButton: props => null,
         }}

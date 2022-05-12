@@ -13,6 +13,7 @@ import {
   Image,
 } from 'react-native';
 
+//This context is set by the register screen and used below
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {

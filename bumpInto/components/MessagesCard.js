@@ -23,7 +23,7 @@ const MessagesCard = ({friendName, friendPfp, ...rest}) => {
         <TileTxtSub> 3 new messages </TileTxtSub>
 
         <PfpView>
-          <PfpImage source={friendPfp} />
+          <PfpImage source={{uri: friendPfp}} />
         </PfpView>
       </ChatTileUnread>
     </TouchableOpacity>

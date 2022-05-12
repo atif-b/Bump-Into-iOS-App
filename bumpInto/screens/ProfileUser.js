@@ -81,6 +81,8 @@ const ProfileUser = ({route, navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalFVisible, setModalFVisible] = useState(false);
+
   const [nameState, setName] = useState('user');
 
   const onRefresh = useCallback(() => {
@@ -91,14 +93,6 @@ const ProfileUser = ({route, navigation}) => {
   });
 
   const getUser = async () => {
-    // const url = await storage()
-    //   .ref('711DBED1-F9ED-477F-973E-E02EF82DE8E0.jpg')
-    //   .getDownloadURL();
-
-    // console.log('URL == ', url);
-    // setTImg(url);
-    // console.log('tImg -- ', tImg);
-
     const currentUser = await firestore()
       .collection('users')
       .doc(friendId)
@@ -107,8 +101,8 @@ const ProfileUser = ({route, navigation}) => {
         if (documentSnapshot.exists) {
           console.log('user data ', documentSnapshot.data());
           getInterests(documentSnapshot.data());
-          // setImagePfp(documentSnapshot.data().pfp);
-          // setImageBanner(documentSnapshot.data().banner);
+          setImagePfp(documentSnapshot.data().pfp);
+          setImageBanner(documentSnapshot.data().banner);
           setUserData(documentSnapshot.data());
           setName(
             documentSnapshot.data().firstName +
@@ -135,6 +129,54 @@ const ProfileUser = ({route, navigation}) => {
     setModalVisible(!isModalVisible);
   };
 
+  const toggleModalF = () => {
+    setModalFVisible(!isModalFVisible);
+  };
+
+  const addFriend = async () => {
+    const userDName = user.displayName;
+    const userFName = userDName.substring(0, userDName.indexOf(' '));
+
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('friends')
+      .doc(friendId)
+      .set({
+        name: nameState,
+      })
+      .then(() => {
+        console.log('friend added');
+      });
+
+    await firestore()
+      .collection('users')
+      .doc(friendId)
+      .collection('friends')
+      .doc(user.uid)
+      .set({
+        name: userFName,
+      })
+      .then(() => {
+        console.log('friend added');
+      });
+
+    removeRequest();
+  };
+
+  const removeRequest = async () => {
+    await firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('friendReqs')
+      .doc(friendId)
+      .delete()
+      .then(() => {
+        console.log('Request removed');
+      });
+    toggleModalF();
+  };
+
   // When the screen is loaded, below functions are called
   useEffect(() => {
     console.log('passed id ', friendId);
@@ -154,7 +196,6 @@ const ProfileUser = ({route, navigation}) => {
   };
 
   return (
-    //add SafeAreaView tag here if i dont want the background img covering past notch.
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -164,13 +205,8 @@ const ProfileUser = ({route, navigation}) => {
         flex: 1,
       }}>
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View
-          style={{
-            backgroundColor: '#abc',
-            width: 400,
-          }}>
+        <View>
           <BannerImage source={imageBanner} />
-          {/* <Image source={require('../assets/testPFP.jpg')} /> */}
         </View>
 
         <View style={styles.headerTile}>
@@ -201,7 +237,7 @@ const ProfileUser = ({route, navigation}) => {
               <TouchableOpacity
                 style={styles.touchOpac}
                 onPress={() => {
-                  alert('you clicked bump button');
+                  toggleModalF();
                 }}>
                 <Image
                   style={styles.bumpBtn}
@@ -365,8 +401,6 @@ const ProfileUser = ({route, navigation}) => {
           left: 20,
         }}>
         <PfpImage source={imagePfp} />
-        {/* <Image source={imageBanner} /> */}
-        {/* <Image source={tImg} /> */}
       </View>
 
       <Modal isVisible={isModalVisible} backdropColor="grey">
@@ -393,6 +427,22 @@ const ProfileUser = ({route, navigation}) => {
           />
 
           <Button title="Ok" onPress={toggleModal} />
+        </View>
+      </Modal>
+
+      <Modal isVisible={isModalFVisible} backdropColor="grey">
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 20,
+            borderRadius: 10,
+          }}>
+          <Text style={{textAlign: 'center', fontSize: 20, padding: 6}}>
+            Add friend?
+          </Text>
+
+          <Button title="No" onPress={removeRequest} />
+          <Button title="Yes" onPress={addFriend} />
         </View>
       </Modal>
     </ScrollView>

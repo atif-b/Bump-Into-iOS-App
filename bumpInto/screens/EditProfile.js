@@ -115,6 +115,7 @@ const EditProfile = ({navigation}) => {
           console.log('user data ', documentSnapshot.data());
           getInterests(documentSnapshot.data());
           setImagePfp(documentSnapshot.data().pfp);
+          setImageBanner(documentSnapshot.data().banner);
           setUserData(documentSnapshot.data());
         }
       });
@@ -125,38 +126,8 @@ const EditProfile = ({navigation}) => {
   //////
 
   useEffect(() => {
-    console.log('this is done first?');
     getUser();
-    // getInterests();
-
-    //when calling all info from db, check how many module vals are provided
-    //and set the right amount of modules as true
-    //also disable all module boxes unless the one above is true
   }, []);
-
-  // const uploadImage = async () => {
-  //   const uploadUri = imagePfp.uri;
-  //   const filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-
-  //   console.log('Filename : ', filename);
-  //   const fileExt = filename.split('.').pop();
-  //   console.log('fileEXT ', fileExt);
-  //   console.log('upload uri : ', uploadUri);
-
-  //   // const reference = storage().ref(`pfp/images/${filename}`);
-
-  //   const reference = storage().ref(filename);
-
-  //   try {
-  //     await reference.putFile(uploadUri);
-  //     // await reference.putFile(uploadUri,
-  //     //   StorageMetadata(contentType: 'image/jpg'),
-  //     // );
-  //     // await reference.putFile(uploadUri, StorageMetadata(contentType: 'image/jpg'));
-  //   } catch (err) {
-  //     console.log('error uploading image to storage: ', err);
-  //   }
-  // };
 
   const choosePhotoFromLibraryPfp = async () => {
     ImagePicker.openPicker({
@@ -168,11 +139,6 @@ const EditProfile = ({navigation}) => {
       .then(async image => {
         change = false;
         setImagePfp({uri: image.path});
-
-        // const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
-        // setImagePfp({uri: imageUri});
-
-        // await uploadPfp();
       })
       .catch(err => {
         console.log('error2!!! ---- ' + err.toString());
@@ -191,23 +157,6 @@ const EditProfile = ({navigation}) => {
       })
       .catch(err => {
         console.log('error!!! ---- ' + err.toString());
-      });
-  };
-
-  const uploadPfp = async () => {
-    // use useState (image)
-    // update ^ to firestore
-    // where ___ == ____
-    console.log('uploadPfp called');
-    console.log('gonna upload -> ', imagePfp);
-    firestore()
-      .collection('users')
-      .doc(user.uid)
-      .update({
-        pfp: imagePfp,
-      })
-      .then(() => {
-        console.log('user pfp updated!');
       });
   };
 
@@ -403,7 +352,6 @@ const EditProfile = ({navigation}) => {
     await socialsToUserData();
     await interestsToUserData();
     await pfpToUserData();
-    // await uploadImage();
     await bannerToUserData();
 
     console.log('====================================');
@@ -440,18 +388,6 @@ const EditProfile = ({navigation}) => {
         toggleModalU();
       });
   };
-
-  // const uploadBanner = () => {
-  //   firestore()
-  //     .collection('users')
-  //     .doc(user.uid)
-  //     .update({
-  //       banner: image.sourceURL,
-  //     })
-  //     .then(() => {
-  //       console.log('user pfp updated!');
-  //     });
-  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -506,8 +442,6 @@ const EditProfile = ({navigation}) => {
                 <SocialInput
                   defaultValue={userData ? userData.modules[0] : 'Module'}
                   onChangeText={module1 => (modulesArray[0] = module1)}
-                  // onChangeText={txt => setUserData({...userData, modules: txt})}
-                  // onChangeText={txt => console.log(txt)}
                   maxLength={6}
                   keyboardType="default"
                   ref={input => {
@@ -521,8 +455,6 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  // value={module2}
-                  // onChangeText={module2 => (modulesArray[1] = module2)}
                   defaultValue={userData ? userData.modules[1] : 'Module'}
                   onChangeText={module2 => (modulesArray[1] = module2)}
                   maxLength={6}
@@ -537,8 +469,6 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  // value={module3}
-                  // onChangeText={module3 => (modulesArray[2] = module3)}
                   defaultValue={userData ? userData.modules[2] : 'Module'}
                   onChangeText={module3 => (modulesArray[2] = module3)}
                   maxLength={6}
@@ -553,8 +483,6 @@ const EditProfile = ({navigation}) => {
                   <ModuleAdd />
                 </TouchableOpacity>
                 <SocialInput
-                  // value={module4}
-                  // onChangeText={module4 => (modulesArray[3] = module4)}
                   defaultValue={userData ? userData.modules[3] : 'Module'}
                   onChangeText={module4 => (modulesArray[3] = module4)}
                   maxLength={6}
@@ -580,8 +508,6 @@ const EditProfile = ({navigation}) => {
                 multiline
                 numberOfLines={4}
                 maxLength={160}
-                // value={about}
-                // onChangeText={userAbout => setAbout(userAbout)}
                 value={
                   userData ? userData.about : 'Write something about yourself'
                 }
@@ -605,8 +531,6 @@ const EditProfile = ({navigation}) => {
                   source={require('../assets/icons/instagram.png')}
                 />
                 <SocialInput
-                  // value={instagram}
-                  // onChangeText={userInsta => setInstagram(userInsta)}
                   defaultValue={userData ? userData.socials[0] : 'Insta'}
                   onChangeText={social1 => setInstagram(social1)}
                   keyboardType="default"
@@ -620,8 +544,6 @@ const EditProfile = ({navigation}) => {
               <SocialRow>
                 <SocialIcon source={require('../assets/icons/discordB.png')} />
                 <SocialInput
-                  // value={discord}
-                  // onChangeText={userDiscord => setDiscord(userDiscord)}
                   defaultValue={userData ? userData.socials[1] : 'Discord'}
                   onChangeText={social2 => setDiscord(social2)}
                   keyboardType="default"
@@ -635,8 +557,6 @@ const EditProfile = ({navigation}) => {
               <SocialRow>
                 <SocialIcon source={require('../assets/icons/email.png')} />
                 <SocialInput
-                  // value={email}
-                  // onChangeText={userEmail => setEmail(userEmail)}
                   defaultValue={userData ? userData.socials[2] : 'Email'}
                   onChangeText={social3 => setEmail(social3)}
                   keyboardType="email-address"
@@ -669,9 +589,6 @@ const EditProfile = ({navigation}) => {
                 <InterestBtn title="Add" onPress={() => addInterest()} />
               </SocialRow>
 
-              {/* defaultValue={userData ? userData.modules[0] : 'Module'} */}
-
-              {/* {userData.interests.map(inter => { */}
               {interestArray.map(inter => {
                 if (inter != 'null') {
                   console.log('int array mappping!');
@@ -784,10 +701,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-
     backgroundColor: 'rgba(170, 187, 204, 0.1)',
     paddingVertical: 6,
-    // backgroundColor: 'violet',
   },
 
   msgBtn: {
@@ -797,40 +712,12 @@ const styles = StyleSheet.create({
     margin: 2,
   },
 
-  headerTile: {
-    backgroundColor: '#f5f5f5',
-    paddingTop: 45,
-    paddingLeft: 15,
-    paddingBottom: 20,
-    paddingRight: 5,
-    flex: 2,
-  },
-
-  headerTileMain: {
-    fontSize: 28,
-  },
-
-  headerTileSub: {
-    fontSize: 16,
-  },
-
   button: {
     backgroundColor: '#fafafa',
     borderRadius: 18,
     padding: 5,
     marginBottom: 2,
     margin: 2,
-  },
-
-  touchOpac: {
-    backgroundColor: 'transparent',
-    margin: 4,
-  },
-
-  profileBody: {
-    flex: 10,
-    backgroundColor: '#fff',
-    padding: 20,
   },
 
   textTitles: {
@@ -845,48 +732,3 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
-
-////CODE TO ADD A USER TO FIRESTORE/////
-
-// firestore()
-//   .collection('users')
-//   .add({
-//     firstName: 'AtifTEST',
-//     lastName: 'ButtTEST',
-//     email: 'w123@my.westminster.ac.uk',
-//     pfp: 'test',
-//     banner: 'testBanner',
-//   })
-//   .then(() => {
-//     console.log('user added!');
-//   });
-
-////
-
-////CODE TO GET USER FROM FIRESTORE/////
-
-// firestore()
-//     .collection('users')
-//     .where('firstName', '==', 'AtifTEST')
-//     .get()
-//     .then(querySnapshot => {
-//       querySnapshot.forEach(documentSnapshot => {
-//         console.log('DATA: ', documentSnapshot.get('email'));
-//       });
-//     });
-
-////
-
-/////CODE TO UPDATE USER IN FIRESTORE/////
-
-// firestore()
-//     .collection('users')
-//     .doc('iuWM3WsOJOS1PNHfVjhk')
-//     .update({
-//       pfp: 'test1',
-//     })
-//     .then(() => {
-//       console.log('user updated!!!!');
-//     });
-
-///
